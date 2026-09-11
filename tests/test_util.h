@@ -15,7 +15,7 @@ inline void reportFailure(const char* file, int line, const std::string& message
     std::cerr << file << ":" << line << ": FALHOU: " << message << "\n";
 }
 
-}  // namespace test
+}
 
 #define CHECK(condition)                                                        \
     do {                                                                        \

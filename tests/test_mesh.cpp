@@ -144,7 +144,7 @@ void contagem_negativa_falha_com_mensagem() {
     CHECK(contem(error, "cabeçalho"));
 }
 
-}  // namespace
+}
 
 int main() {
     carrega_triangulo_com_contagens_corretas();

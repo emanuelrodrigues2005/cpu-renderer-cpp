@@ -18,4 +18,4 @@ public:
     virtual void drawPixel(int x, int y, std::uint32_t color) = 0;
 };
 
-}  // namespace cg
+}

@@ -77,7 +77,7 @@ void normalizacao_do_vetor_nulo_retorna_vetor_nulo() {
     CHECK_EQ(unitario.z, 0.0F);
 }
 
-}  // namespace
+}
 
 int main() {
     soma_e_subtracao_retornam_componentes_corretos();
