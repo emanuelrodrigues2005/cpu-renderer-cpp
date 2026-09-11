@@ -58,6 +58,19 @@ target_compile_options(test_camera PRIVATE -Wall -Wextra -Wpedantic)
 add_test(NAME camera COMMAND test_camera)
 set_tests_properties(camera PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+add_executable(test_projection
+    tests/test_projection.cpp
+    src/Projection.cpp
+    src/Camera.cpp
+    src/Vec3.cpp
+)
+
+target_include_directories(test_projection PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_projection PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME projection COMMAND test_projection)
+set_tests_properties(projection PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 add_test(NAME info_sucesso COMMAND cpu-renderer --info models/triangulo.byu)
 set_tests_properties(info_sucesso PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -96,6 +109,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh test_vec3 test_camera
+    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection
     USES_TERMINAL
 )
