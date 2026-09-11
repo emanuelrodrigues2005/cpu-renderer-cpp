@@ -55,14 +55,14 @@ ctest --test-dir build --output-on-failure
 - Índices de triângulos do arquivo BYU são 1-based; converta para 0-based no carregamento e valide os limites.
 - Mantenha a separação de responsabilidades: cada módulo tem uma função clara e não conhece detalhes dos demais além do seu header.
 - Siga o `.clang-format` do repositório.
-- Comentários apenas onde a intenção não é óbvia (fórmulas, convenções de borda).
+- Sem comentários no meio do código: nomes e funções claras explicam a intenção. Um comentário só entra quando o código não expressa o motivo sozinho (fórmula, convenção de borda, restrição externa) — e deve ser reportado ao final, com o motivo.
 - Prefira mudanças pequenas e incrementais, validando cada etapa antes da próxima.
 
 ## Fluxo de trabalho (obrigatório)
 
 1. Trabalhe em **uma issue por vez**, seguindo a ordem de dependências descrita no corpo dela.
 2. **Nunca** execute `git add`, `git commit`, `git push`, `git checkout -b`, `git merge` ou qualquer escrita via `gh` (issues, PRs, comentários). Os commits são **manuais**, feitos pelo responsável do projeto.
-3. Ao concluir uma issue: rode build e testes, garanta zero warnings, atualize `CONTEXT.md`/ADRs se houver decisão nova e reporte (a) arquivos criados/alterados, (b) comandos executados, (c) resultado da verificação.
+3. Ao concluir uma issue: rode build e testes, garanta zero warnings, atualize `CONTEXT.md`/ADRs se houver decisão nova e reporte (a) arquivos criados/alterados, (b) comandos executados, (c) resultado da verificação e (d) **cada comentário adicionado no código, com o motivo**, para o responsável revisar e corrigir se necessário.
 4. Não avance para a issue seguinte sem o commit manual da anterior.
 
 ## Definition of Done (por issue)

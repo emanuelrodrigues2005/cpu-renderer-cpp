@@ -13,7 +13,7 @@ void setDrawColor(SDL_Renderer* renderer, std::uint32_t color) {
     SDL_SetRenderDrawColor(renderer, r, g, b, 0xFF);
 }
 
-}  // namespace
+}
 
 WindowSDL::WindowSDL(const std::string& title, int width, int height)
     : width_(width), height_(height) {
@@ -69,4 +69,4 @@ void WindowSDL::drawPixel(int x, int y, std::uint32_t color) {
 
 void WindowSDL::present() { SDL_RenderPresent(renderer_); }
 
-}  // namespace cg
+}
