@@ -71,6 +71,17 @@ target_compile_options(test_projection PRIVATE -Wall -Wextra -Wpedantic)
 add_test(NAME projection COMMAND test_projection)
 set_tests_properties(projection PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+add_executable(test_rasterizer
+    tests/test_rasterizer.cpp
+    src/Rasterizer.cpp
+    src/MemoryCanvas.cpp
+)
+
+target_include_directories(test_rasterizer PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_rasterizer PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME rasterizer COMMAND test_rasterizer)
+
 add_test(NAME info_sucesso COMMAND cpu-renderer --info models/triangulo.byu)
 set_tests_properties(info_sucesso PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -109,6 +120,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection
+    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer
     USES_TERMINAL
 )
