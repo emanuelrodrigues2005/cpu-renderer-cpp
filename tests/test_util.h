@@ -33,3 +33,14 @@ inline void reportFailure(const char* file, int line, const std::string& message
                                 std::string(#actual) + " == " + #expected);     \
         }                                                                       \
     } while (false)
+
+#define CHECK_NEAR(actual, expected, tolerance)                                 \
+    do {                                                                        \
+        const auto actualValue = (actual);                                      \
+        const auto expectedValue = (expected);                                  \
+        const auto difference = actualValue - expectedValue;                    \
+        if (!(difference <= (tolerance) && difference >= -(tolerance))) {       \
+            test::reportFailure(__FILE__, __LINE__,                             \
+                                std::string(#actual) + " ~= " + #expected);     \
+        }                                                                       \
+    } while (false)

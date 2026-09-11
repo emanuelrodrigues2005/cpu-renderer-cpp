@@ -36,6 +36,16 @@ target_compile_options(test_mesh PRIVATE -Wall -Wextra -Wpedantic)
 add_test(NAME mesh COMMAND test_mesh)
 set_tests_properties(mesh PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+add_executable(test_vec3
+    tests/test_vec3.cpp
+    src/Vec3.cpp
+)
+
+target_include_directories(test_vec3 PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_vec3 PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME vec3 COMMAND test_vec3)
+
 add_test(NAME info_sucesso COMMAND cpu-renderer --info models/triangulo.byu)
 set_tests_properties(info_sucesso PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -74,6 +84,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh
+    DEPENDS cpu-renderer test_mesh test_vec3
     USES_TERMINAL
 )
