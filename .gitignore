@@ -1,0 +1,33 @@
+# Build
+build/
+cmake-build-*/
+out/
+bin/
+
+# Objetos e bibliotecas
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+CTestTestfile.cmake
+Testing/
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Saídas de renderização
+dumps/
+*.bmp
