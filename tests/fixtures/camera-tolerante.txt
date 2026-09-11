@@ -1,0 +1,7 @@
+# camera de teste
+c : 0 -500 500
+N=0 1 -1
+v = 0 -1 -1
+D = 5
+HX = 2
+hy = 2
