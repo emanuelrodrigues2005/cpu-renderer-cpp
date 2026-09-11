@@ -11,6 +11,11 @@ find_package(SDL2 REQUIRED)
 add_executable(cpu-renderer
     src/main.cpp
     src/Mesh.cpp
+    src/Vec3.cpp
+    src/Camera.cpp
+    src/Projection.cpp
+    src/Rasterizer.cpp
+    src/Renderer.cpp
     src/WindowSDL.cpp
 )
 
@@ -82,6 +87,23 @@ target_compile_options(test_rasterizer PRIVATE -Wall -Wextra -Wpedantic)
 
 add_test(NAME rasterizer COMMAND test_rasterizer)
 
+add_executable(test_renderer
+    tests/test_renderer.cpp
+    src/Renderer.cpp
+    src/Rasterizer.cpp
+    src/Projection.cpp
+    src/Camera.cpp
+    src/Vec3.cpp
+    src/Mesh.cpp
+    src/MemoryCanvas.cpp
+)
+
+target_include_directories(test_renderer PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_renderer PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME renderer COMMAND test_renderer)
+set_tests_properties(renderer PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 add_test(NAME info_sucesso COMMAND cpu-renderer --info models/triangulo.byu)
 set_tests_properties(info_sucesso PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -120,6 +142,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer
+    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer test_renderer
     USES_TERMINAL
 )
