@@ -14,6 +14,7 @@ struct Vec3 {
     Vec3 cross(const Vec3& other) const;
     float length() const;
 
+    // O vetor nulo normaliza para (0, 0, 0).
     Vec3 normalized() const;
 };
 
