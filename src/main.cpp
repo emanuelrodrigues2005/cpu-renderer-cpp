@@ -5,10 +5,10 @@
 
 #include <SDL2/SDL.h>
 
-#include "Camera.h"
-#include "Mesh.h"
-#include "Renderer.h"
-#include "WindowSDL.h"
+#include "pipeline/Camera.h"
+#include "mesh/Mesh.h"
+#include "pipeline/Renderer.h"
+#include "canvas/WindowSDL.h"
 
 namespace {
 

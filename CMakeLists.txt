@@ -10,13 +10,13 @@ find_package(SDL2 REQUIRED)
 
 add_executable(cpu-renderer
     src/main.cpp
-    src/Mesh.cpp
-    src/Vec3.cpp
-    src/Camera.cpp
-    src/Projection.cpp
-    src/Rasterizer.cpp
-    src/Renderer.cpp
-    src/WindowSDL.cpp
+    src/mesh/Mesh.cpp
+    src/math/Vec3.cpp
+    src/pipeline/Camera.cpp
+    src/pipeline/Projection.cpp
+    src/pipeline/Rasterizer.cpp
+    src/pipeline/Renderer.cpp
+    src/canvas/WindowSDL.cpp
 )
 
 if(TARGET SDL2::SDL2)
@@ -26,13 +26,14 @@ else()
     target_link_libraries(cpu-renderer PRIVATE ${SDL2_LIBRARIES})
 endif()
 
+target_include_directories(cpu-renderer PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_compile_options(cpu-renderer PRIVATE -Wall -Wextra -Wpedantic)
 
 enable_testing()
 
 add_executable(test_mesh
     tests/test_mesh.cpp
-    src/Mesh.cpp
+    src/mesh/Mesh.cpp
 )
 
 target_include_directories(test_mesh PRIVATE ${CMAKE_SOURCE_DIR}/src)
@@ -43,7 +44,7 @@ set_tests_properties(mesh PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 add_executable(test_vec3
     tests/test_vec3.cpp
-    src/Vec3.cpp
+    src/math/Vec3.cpp
 )
 
 target_include_directories(test_vec3 PRIVATE ${CMAKE_SOURCE_DIR}/src)
@@ -53,8 +54,8 @@ add_test(NAME vec3 COMMAND test_vec3)
 
 add_executable(test_camera
     tests/test_camera.cpp
-    src/Camera.cpp
-    src/Vec3.cpp
+    src/pipeline/Camera.cpp
+    src/math/Vec3.cpp
 )
 
 target_include_directories(test_camera PRIVATE ${CMAKE_SOURCE_DIR}/src)
@@ -65,9 +66,9 @@ set_tests_properties(camera PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 add_executable(test_projection
     tests/test_projection.cpp
-    src/Projection.cpp
-    src/Camera.cpp
-    src/Vec3.cpp
+    src/pipeline/Projection.cpp
+    src/pipeline/Camera.cpp
+    src/math/Vec3.cpp
 )
 
 target_include_directories(test_projection PRIVATE ${CMAKE_SOURCE_DIR}/src)
@@ -78,8 +79,8 @@ set_tests_properties(projection PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 
 add_executable(test_rasterizer
     tests/test_rasterizer.cpp
-    src/Rasterizer.cpp
-    src/MemoryCanvas.cpp
+    src/pipeline/Rasterizer.cpp
+    src/canvas/MemoryCanvas.cpp
 )
 
 target_include_directories(test_rasterizer PRIVATE ${CMAKE_SOURCE_DIR}/src)
@@ -89,13 +90,13 @@ add_test(NAME rasterizer COMMAND test_rasterizer)
 
 add_executable(test_renderer
     tests/test_renderer.cpp
-    src/Renderer.cpp
-    src/Rasterizer.cpp
-    src/Projection.cpp
-    src/Camera.cpp
-    src/Vec3.cpp
-    src/Mesh.cpp
-    src/MemoryCanvas.cpp
+    src/pipeline/Renderer.cpp
+    src/pipeline/Rasterizer.cpp
+    src/pipeline/Projection.cpp
+    src/pipeline/Camera.cpp
+    src/math/Vec3.cpp
+    src/mesh/Mesh.cpp
+    src/canvas/MemoryCanvas.cpp
 )
 
 target_include_directories(test_renderer PRIVATE ${CMAKE_SOURCE_DIR}/src)

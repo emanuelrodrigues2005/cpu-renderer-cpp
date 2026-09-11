@@ -2,10 +2,10 @@
 #include <cstdint>
 #include <string>
 
-#include "Camera.h"
-#include "MemoryCanvas.h"
-#include "Mesh.h"
-#include "Renderer.h"
+#include "pipeline/Camera.h"
+#include "canvas/MemoryCanvas.h"
+#include "mesh/Mesh.h"
+#include "pipeline/Renderer.h"
 #include "test_util.h"
 
 namespace {

@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-#include "Canvas.h"
+#include "canvas/Canvas.h"
 
 struct SDL_Window;
 struct SDL_Renderer;

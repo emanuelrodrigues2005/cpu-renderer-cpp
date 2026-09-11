@@ -1,7 +1,7 @@
-#include "Renderer.h"
+#include "pipeline/Renderer.h"
 
-#include "Projection.h"
-#include "Rasterizer.h"
+#include "pipeline/Projection.h"
+#include "pipeline/Rasterizer.h"
 
 namespace cg {
 

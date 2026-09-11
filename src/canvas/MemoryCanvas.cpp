@@ -1,4 +1,4 @@
-#include "MemoryCanvas.h"
+#include "canvas/MemoryCanvas.h"
 
 #include <algorithm>
 #include <cstddef>

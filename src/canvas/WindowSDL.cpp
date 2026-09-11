@@ -1,4 +1,4 @@
-#include "WindowSDL.h"
+#include "canvas/WindowSDL.h"
 
 #include <SDL2/SDL.h>
 

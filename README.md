@@ -47,12 +47,18 @@ ctest --test-dir build --output-on-failure
 ## Estrutura do repositório
 
 ```
-src/        código-fonte (pipeline e camada SDL)
-models/     malhas BYU de exemplo
-camera/     parâmetros da câmera virtual
-tests/      testes automatizados (CTest)
-docs/       requisitos, especificação da 1ª VA e ADRs
+src/
+├── math/       Vec3
+├── mesh/       leitura e armazenamento BYU
+├── pipeline/   câmera, projeção, rasterização e renderer
+└── canvas/     Canvas, janela SDL e canvas em memória
+models/         malhas BYU de exemplo
+camera/         camera.txt (exemplo do PDF) e presets/ calibrados por modelo
+tests/          testes automatizados (CTest)
+docs/           requisitos, especificação da 1ª VA e ADRs
 ```
+
+> O levantamento (§5) sugere `src/` plano; o projeto agrupa os mesmos módulos por camada, sem alterar responsabilidades ou interfaces.
 
 ## Documentação
 

@@ -1,7 +1,7 @@
 #include <cstddef>
 #include <string>
 
-#include "Mesh.h"
+#include "mesh/Mesh.h"
 #include "test_util.h"
 
 namespace {

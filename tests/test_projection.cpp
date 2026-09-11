@@ -1,7 +1,7 @@
 #include <string>
 
-#include "Camera.h"
-#include "Projection.h"
+#include "pipeline/Camera.h"
+#include "pipeline/Projection.h"
 #include "test_util.h"
 
 namespace {

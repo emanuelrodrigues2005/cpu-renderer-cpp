@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Camera.h"
-#include "Vec3.h"
+#include "pipeline/Camera.h"
+#include "math/Vec3.h"
 
 namespace cg {
 

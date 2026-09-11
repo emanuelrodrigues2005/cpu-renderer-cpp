@@ -1,7 +1,7 @@
 #include <cstdint>
 
-#include "MemoryCanvas.h"
-#include "Rasterizer.h"
+#include "canvas/MemoryCanvas.h"
+#include "pipeline/Rasterizer.h"
 #include "test_util.h"
 
 namespace {

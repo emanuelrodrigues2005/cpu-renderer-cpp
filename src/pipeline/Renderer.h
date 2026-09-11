@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Camera.h"
-#include "Canvas.h"
-#include "Mesh.h"
+#include "pipeline/Camera.h"
+#include "canvas/Canvas.h"
+#include "mesh/Mesh.h"
 
 namespace cg {
 

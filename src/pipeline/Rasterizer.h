@@ -2,8 +2,8 @@
 
 #include <cstdint>
 
-#include "Canvas.h"
-#include "Projection.h"
+#include "canvas/Canvas.h"
+#include "pipeline/Projection.h"
 
 namespace cg {
 

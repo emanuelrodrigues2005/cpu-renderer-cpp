@@ -16,16 +16,16 @@ Este repositório implementa um pipeline gráfico simplificado em C++ (CPU), rep
 
 | Módulo | Responsabilidade |
 |---|---|
-| `src/Vec3` | matemática vetorial (RF02) |
-| `src/Mesh` | leitura e armazenamento de malhas BYU (RF01) |
-| `src/Camera` | parâmetros, base U/V/N e mundo→vista (RF03/RF04) |
-| `src/Projection` | perspectiva, normalização e coordenadas de tela (RF05/RF06) |
-| `src/Rasterizer` | scan line (RF07) |
-| `src/Renderer` | integração do pipeline (RF08) |
-| `src/Canvas.h` | contrato de desenho (`clear`, `drawPixel`) |
-| `src/WindowSDL` | janela e pixels via SDL2 (RF08) |
-| `src/MemoryCanvas` | canvas em memória (testes e dump) |
-| `src/BmpWriter` | escrita de BMP 24-bit com a biblioteca padrão |
+| `src/math/Vec3` | matemática vetorial (RF02) |
+| `src/mesh/Mesh` | leitura e armazenamento de malhas BYU (RF01) |
+| `src/pipeline/Camera` | parâmetros, base U/V/N e mundo→vista (RF03/RF04) |
+| `src/pipeline/Projection` | perspectiva, normalização e coordenadas de tela (RF05/RF06) |
+| `src/pipeline/Rasterizer` | scan line e linha (RF07) |
+| `src/pipeline/Renderer` | integração do pipeline (RF08) |
+| `src/canvas/Canvas.h` | contrato de desenho (`clear`, `drawPixel`) |
+| `src/canvas/WindowSDL` | janela e pixels via SDL2 (RF08) |
+| `src/canvas/MemoryCanvas` | canvas em memória (testes e dump) |
+| `src/canvas/BmpWriter` | escrita de BMP 24-bit com a biblioteca padrão |
 
 ## Comandos
 
