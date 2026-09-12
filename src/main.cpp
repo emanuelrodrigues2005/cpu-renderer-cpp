@@ -213,6 +213,8 @@ int main(int argc, char** argv) {
                     const int index = static_cast<int>(key - SDLK_1);
                     if (loadModel(kModelPresets[index].model, mesh) &&
                         loadCamera(kModelPresets[index].camera, camera)) {
+                        modelPath = kModelPresets[index].model;
+                        cameraPath = kModelPresets[index].camera;
                         redraw();
                     }
                 }

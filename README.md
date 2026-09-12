@@ -53,7 +53,7 @@ Argumentos: `[modelo.byu] [camera.txt]` (opcionais, com os padrões acima) e as 
 | Tecla | Ação |
 |-------|------|
 | `1`–`6` | Troca modelo + preset (triangulo, piramide, maca, maca2, vaso, calice2) |
-| `R` | Recarrega o arquivo de câmera corrente e redesenha |
+| `R` | Recarrega o arquivo de câmera corrente (o preset do modelo atual, após `1`–`6`) |
 | `D` | Alterna modo pontos |
 | `W` | Alterna modo arame |
 | `+` / `-` | Zoom (aumenta/diminui `d`) |
