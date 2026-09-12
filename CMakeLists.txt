@@ -17,6 +17,8 @@ add_executable(cpu-renderer
     src/pipeline/Rasterizer.cpp
     src/pipeline/Renderer.cpp
     src/canvas/WindowSDL.cpp
+    src/canvas/MemoryCanvas.cpp
+    src/canvas/BmpWriter.cpp
 )
 
 if(TARGET SDL2::SDL2)
@@ -105,6 +107,17 @@ target_compile_options(test_renderer PRIVATE -Wall -Wextra -Wpedantic)
 add_test(NAME renderer COMMAND test_renderer)
 set_tests_properties(renderer PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+add_executable(test_bmp_writer
+    tests/test_bmp_writer.cpp
+    src/canvas/BmpWriter.cpp
+    src/canvas/MemoryCanvas.cpp
+)
+
+target_include_directories(test_bmp_writer PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_bmp_writer PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME bmp_writer COMMAND test_bmp_writer)
+
 add_test(NAME info_sucesso COMMAND cpu-renderer --info models/triangulo.byu)
 set_tests_properties(info_sucesso PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -126,6 +139,23 @@ set_tests_properties(smoke PROPERTIES
     TIMEOUT 10
 )
 
+add_test(NAME dump_sucesso COMMAND cpu-renderer --dump ${CMAKE_BINARY_DIR}/dump-teste.bmp
+                                      models/triangulo.byu camera/camera.txt)
+set_tests_properties(dump_sucesso PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    PASS_REGULAR_EXPRESSION "BMP salvo"
+    TIMEOUT 10
+)
+
+add_test(NAME dump_modelo_inexistente COMMAND cpu-renderer --dump
+                                             ${CMAKE_BINARY_DIR}/dump-erro.bmp
+                                             models/inexistente.byu camera/camera.txt)
+set_tests_properties(dump_modelo_inexistente PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    WILL_FAIL TRUE
+    TIMEOUT 10
+)
+
 add_custom_target(run
     COMMAND cpu-renderer
     DEPENDS cpu-renderer
@@ -143,6 +173,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer test_renderer
+    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer test_renderer test_bmp_writer
     USES_TERMINAL
 )

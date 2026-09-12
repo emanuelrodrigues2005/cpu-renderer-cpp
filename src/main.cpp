@@ -9,6 +9,8 @@
 #include "mesh/Mesh.h"
 #include "pipeline/Renderer.h"
 #include "canvas/WindowSDL.h"
+#include "canvas/MemoryCanvas.h"
+#include "canvas/BmpWriter.h"
 
 namespace {
 
@@ -88,6 +90,7 @@ int main(int argc, char** argv) {
     bool testPattern = false;
     bool showInfo = false;
     bool startFullscreen = false;
+    std::string dumpPath;
     std::string modelPath = kDefaultModelPath;
     std::string cameraPath = kDefaultCameraPath;
     int positionalCount = 0;
@@ -102,6 +105,12 @@ int main(int argc, char** argv) {
             showInfo = true;
         } else if (arg == "--fullscreen") {
             startFullscreen = true;
+        } else if (arg == "--dump") {
+            if (i + 1 >= argc) {
+                std::cerr << "erro: --dump exige um caminho de arquivo\n";
+                return EXIT_FAILURE;
+            }
+            dumpPath = argv[++i];
         } else if (positionalCount == 0) {
             modelPath = arg;
             ++positionalCount;
@@ -125,6 +134,19 @@ int main(int argc, char** argv) {
     cg::Camera camera;
     if (!loadCamera(cameraPath, camera)) {
         return EXIT_FAILURE;
+    }
+
+    if (!dumpPath.empty()) {
+        cg::MemoryCanvas canvas{kWindowWidth, kWindowHeight};
+        cg::renderMesh(mesh, camera, canvas);
+
+        std::string error;
+        if (!cg::writeBmp(dumpPath, canvas, error)) {
+            std::cerr << "erro: " << error << "\n";
+            return EXIT_FAILURE;
+        }
+        std::cout << "BMP salvo em '" << dumpPath << "'\n";
+        return EXIT_SUCCESS;
     }
 
     cg::WindowSDL window("cpu-renderer-cpp", kWindowWidth, kWindowHeight);
