@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "pipeline/Camera.h"
 
 #include <cctype>
 #include <fstream>

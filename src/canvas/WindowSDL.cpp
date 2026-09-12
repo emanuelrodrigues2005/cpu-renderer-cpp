@@ -1,4 +1,4 @@
-#include "WindowSDL.h"
+#include "canvas/WindowSDL.h"
 
 #include <SDL2/SDL.h>
 
@@ -23,7 +23,7 @@ WindowSDL::WindowSDL(const std::string& title, int width, int height)
     }
 
     window_ = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                               width, height, SDL_WINDOW_SHOWN);
+                               width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (window_ == nullptr) {
         SDL_Log("SDL_CreateWindow failed: %s", SDL_GetError());
         return;
@@ -54,7 +54,14 @@ int WindowSDL::width() const { return width_; }
 
 int WindowSDL::height() const { return height_; }
 
+void WindowSDL::syncSize() {
+    if (window_ != nullptr) {
+        SDL_GetWindowSize(window_, &width_, &height_);
+    }
+}
+
 void WindowSDL::clear(std::uint32_t color) {
+    syncSize();
     setDrawColor(renderer_, color);
     SDL_RenderClear(renderer_);
 }
@@ -68,5 +75,11 @@ void WindowSDL::drawPixel(int x, int y, std::uint32_t color) {
 }
 
 void WindowSDL::present() { SDL_RenderPresent(renderer_); }
+
+void WindowSDL::toggleFullscreen() {
+    fullscreen_ = !fullscreen_;
+    SDL_SetWindowFullscreen(window_, fullscreen_ ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+    syncSize();
+}
 
 }

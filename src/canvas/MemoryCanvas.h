@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "Canvas.h"
+#include "canvas/Canvas.h"
 
 namespace cg {
 

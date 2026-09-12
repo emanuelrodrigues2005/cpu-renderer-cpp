@@ -28,6 +28,8 @@ Testing/
 *.swo
 *~
 
-# Saídas de renderização
 dumps/
 *.bmp
+
+/docs/
+/AGENTS.md

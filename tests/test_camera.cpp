@@ -1,6 +1,6 @@
 #include <string>
 
-#include "Camera.h"
+#include "pipeline/Camera.h"
 #include "test_util.h"
 
 namespace {

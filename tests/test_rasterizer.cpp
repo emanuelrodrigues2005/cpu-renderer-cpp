@@ -1,7 +1,7 @@
 #include <cstdint>
 
-#include "MemoryCanvas.h"
-#include "Rasterizer.h"
+#include "canvas/MemoryCanvas.h"
+#include "pipeline/Rasterizer.h"
 #include "test_util.h"
 
 namespace {
@@ -118,6 +118,34 @@ void ordem_dos_vertices_nao_importa() {
     }
 }
 
+void linha_reta_desenha_pixels_de_ponta_a_ponta() {
+    cg::MemoryCanvas horizontal{8, 8};
+    cg::drawLine(horizontal, cg::ScreenPoint{0, 3}, cg::ScreenPoint{4, 3}, cg::kWhite);
+
+    CHECK_EQ(countWhite(horizontal), 5);
+    CHECK(white(horizontal, 0, 3));
+    CHECK(white(horizontal, 4, 3));
+
+    cg::MemoryCanvas diagonal{8, 8};
+    cg::drawLine(diagonal, cg::ScreenPoint{0, 0}, cg::ScreenPoint{4, 4}, cg::kWhite);
+
+    CHECK_EQ(countWhite(diagonal), 5);
+    CHECK(white(diagonal, 0, 0));
+    CHECK(white(diagonal, 4, 4));
+
+    cg::MemoryCanvas inclinada{8, 8};
+    cg::drawLine(inclinada, cg::ScreenPoint{0, 0}, cg::ScreenPoint{4, 2}, cg::kWhite);
+
+    CHECK_EQ(countWhite(inclinada), 5);
+    CHECK(white(inclinada, 0, 0));
+    CHECK(white(inclinada, 4, 2));
+
+    cg::MemoryCanvas reversa{8, 8};
+    cg::drawLine(reversa, cg::ScreenPoint{4, 2}, cg::ScreenPoint{0, 0}, cg::kWhite);
+
+    CHECK_EQ(countWhite(reversa), countWhite(inclinada));
+}
+
 }
 
 int main() {
@@ -127,6 +155,7 @@ int main() {
     triangulos_degenerados_nao_pintam();
     fora_da_janela_e_recortado();
     ordem_dos_vertices_nao_importa();
+    linha_reta_desenha_pixels_de_ponta_a_ponta();
 
     return test::failureCount() == 0 ? 0 : 1;
 }

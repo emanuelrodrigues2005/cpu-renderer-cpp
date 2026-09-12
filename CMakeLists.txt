@@ -10,8 +10,15 @@ find_package(SDL2 REQUIRED)
 
 add_executable(cpu-renderer
     src/main.cpp
-    src/Mesh.cpp
-    src/WindowSDL.cpp
+    src/mesh/Mesh.cpp
+    src/math/Vec3.cpp
+    src/pipeline/Camera.cpp
+    src/pipeline/Projection.cpp
+    src/pipeline/Rasterizer.cpp
+    src/pipeline/Renderer.cpp
+    src/canvas/WindowSDL.cpp
+    src/canvas/MemoryCanvas.cpp
+    src/canvas/BmpWriter.cpp
 )
 
 if(TARGET SDL2::SDL2)
@@ -21,13 +28,14 @@ else()
     target_link_libraries(cpu-renderer PRIVATE ${SDL2_LIBRARIES})
 endif()
 
+target_include_directories(cpu-renderer PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_compile_options(cpu-renderer PRIVATE -Wall -Wextra -Wpedantic)
 
 enable_testing()
 
 add_executable(test_mesh
     tests/test_mesh.cpp
-    src/Mesh.cpp
+    src/mesh/Mesh.cpp
 )
 
 target_include_directories(test_mesh PRIVATE ${CMAKE_SOURCE_DIR}/src)
@@ -38,7 +46,7 @@ set_tests_properties(mesh PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 add_executable(test_vec3
     tests/test_vec3.cpp
-    src/Vec3.cpp
+    src/math/Vec3.cpp
 )
 
 target_include_directories(test_vec3 PRIVATE ${CMAKE_SOURCE_DIR}/src)
@@ -48,8 +56,8 @@ add_test(NAME vec3 COMMAND test_vec3)
 
 add_executable(test_camera
     tests/test_camera.cpp
-    src/Camera.cpp
-    src/Vec3.cpp
+    src/pipeline/Camera.cpp
+    src/math/Vec3.cpp
 )
 
 target_include_directories(test_camera PRIVATE ${CMAKE_SOURCE_DIR}/src)
@@ -60,9 +68,9 @@ set_tests_properties(camera PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 add_executable(test_projection
     tests/test_projection.cpp
-    src/Projection.cpp
-    src/Camera.cpp
-    src/Vec3.cpp
+    src/pipeline/Projection.cpp
+    src/pipeline/Camera.cpp
+    src/math/Vec3.cpp
 )
 
 target_include_directories(test_projection PRIVATE ${CMAKE_SOURCE_DIR}/src)
@@ -73,14 +81,42 @@ set_tests_properties(projection PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 
 add_executable(test_rasterizer
     tests/test_rasterizer.cpp
-    src/Rasterizer.cpp
-    src/MemoryCanvas.cpp
+    src/pipeline/Rasterizer.cpp
+    src/canvas/MemoryCanvas.cpp
 )
 
 target_include_directories(test_rasterizer PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_compile_options(test_rasterizer PRIVATE -Wall -Wextra -Wpedantic)
 
 add_test(NAME rasterizer COMMAND test_rasterizer)
+
+add_executable(test_renderer
+    tests/test_renderer.cpp
+    src/pipeline/Renderer.cpp
+    src/pipeline/Rasterizer.cpp
+    src/pipeline/Projection.cpp
+    src/pipeline/Camera.cpp
+    src/math/Vec3.cpp
+    src/mesh/Mesh.cpp
+    src/canvas/MemoryCanvas.cpp
+)
+
+target_include_directories(test_renderer PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_renderer PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME renderer COMMAND test_renderer)
+set_tests_properties(renderer PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+add_executable(test_bmp_writer
+    tests/test_bmp_writer.cpp
+    src/canvas/BmpWriter.cpp
+    src/canvas/MemoryCanvas.cpp
+)
+
+target_include_directories(test_bmp_writer PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_bmp_writer PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME bmp_writer COMMAND test_bmp_writer)
 
 add_test(NAME info_sucesso COMMAND cpu-renderer --info models/triangulo.byu)
 set_tests_properties(info_sucesso PROPERTIES
@@ -103,6 +139,23 @@ set_tests_properties(smoke PROPERTIES
     TIMEOUT 10
 )
 
+add_test(NAME dump_sucesso COMMAND cpu-renderer --dump ${CMAKE_BINARY_DIR}/dump-teste.bmp
+                                      models/triangulo.byu camera/camera.txt)
+set_tests_properties(dump_sucesso PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    PASS_REGULAR_EXPRESSION "BMP salvo"
+    TIMEOUT 10
+)
+
+add_test(NAME dump_modelo_inexistente COMMAND cpu-renderer --dump
+                                             ${CMAKE_BINARY_DIR}/dump-erro.bmp
+                                             models/inexistente.byu camera/camera.txt)
+set_tests_properties(dump_modelo_inexistente PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    WILL_FAIL TRUE
+    TIMEOUT 10
+)
+
 add_custom_target(run
     COMMAND cpu-renderer
     DEPENDS cpu-renderer
@@ -120,6 +173,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer
+    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer test_renderer test_bmp_writer
     USES_TERMINAL
 )

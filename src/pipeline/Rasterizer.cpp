@@ -1,9 +1,36 @@
-#include "Rasterizer.h"
+#include "pipeline/Rasterizer.h"
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
 
 namespace cg {
+
+void drawLine(Canvas& canvas, const ScreenPoint& a, const ScreenPoint& b, std::uint32_t color) {
+    int x = a.x;
+    int y = a.y;
+    const int deltaX = std::abs(b.x - a.x);
+    const int deltaY = -std::abs(b.y - a.y);
+    const int stepX = a.x < b.x ? 1 : -1;
+    const int stepY = a.y < b.y ? 1 : -1;
+    int error = deltaX + deltaY;
+
+    while (true) {
+        canvas.drawPixel(x, y, color);
+        if (x == b.x && y == b.y) {
+            break;
+        }
+        const int doubledError = 2 * error;
+        if (doubledError >= deltaY) {
+            error += deltaY;
+            x += stepX;
+        }
+        if (doubledError <= deltaX) {
+            error += deltaX;
+            y += stepY;
+        }
+    }
+}
 
 void fillTriangle(Canvas& canvas, const ScreenPoint& a, const ScreenPoint& b, const ScreenPoint& c,
                   std::uint32_t color) {
