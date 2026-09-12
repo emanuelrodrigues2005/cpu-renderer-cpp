@@ -156,6 +156,24 @@ set_tests_properties(dump_modelo_inexistente PROPERTIES
     TIMEOUT 10
 )
 
+add_test(NAME sdl_backend_policy
+         COMMAND ${CMAKE_COMMAND}
+                 -DPROJECT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+                 -P ${CMAKE_SOURCE_DIR}/tests/check_sdl_backend.cmake)
+set_tests_properties(sdl_backend_policy PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    TIMEOUT 10
+)
+
+add_test(NAME default_render_mode
+         COMMAND ${CMAKE_COMMAND}
+                 -DPROJECT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+                 -P ${CMAKE_SOURCE_DIR}/tests/check_default_mode.cmake)
+set_tests_properties(default_render_mode PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    TIMEOUT 10
+)
+
 add_custom_target(run
     COMMAND cpu-renderer
     DEPENDS cpu-renderer

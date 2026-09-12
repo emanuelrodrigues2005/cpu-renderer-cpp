@@ -117,6 +117,17 @@ void campos_ausentes_e_numeros_invalidos_falham() {
     CHECK(contem(error, "d"));
 }
 
+void camera_com_valor_nao_finito_e_rejeitada() {
+    cg::Camera camera;
+    std::string error;
+
+    const bool ok =
+        cg::loadCameraFromFile("tests/fixtures/camera-nao-finita.txt", camera, error);
+
+    CHECK(!ok);
+    CHECK(contem(error, "finito"));
+}
+
 void falha_nao_altera_a_camera_de_destino() {
     cg::Camera camera;
     std::string error;
@@ -140,6 +151,7 @@ int main() {
     camera_com_v_paralelo_a_n_e_rejeitada();
     camera_com_escalar_nao_positivo_e_rejeitada();
     campos_ausentes_e_numeros_invalidos_falham();
+    camera_com_valor_nao_finito_e_rejeitada();
     falha_nao_altera_a_camera_de_destino();
 
     return test::failureCount() == 0 ? 0 : 1;
