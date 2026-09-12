@@ -27,12 +27,16 @@ public:
     void drawPixel(int x, int y, std::uint32_t color) override;
 
     void present();
+    void toggleFullscreen();
 
 private:
+    void syncSize();
+
     SDL_Window* window_ = nullptr;
     SDL_Renderer* renderer_ = nullptr;
     int width_ = 0;
     int height_ = 0;
+    bool fullscreen_ = false;
 };
 
 }

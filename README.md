@@ -4,7 +4,7 @@ Pipeline gráfico implementado manualmente em C++: leitura de malhas no formato 
 
 Projeto da disciplina **Computação Gráfica Básica (06230)** — UFRPE/DC, 1ª VA.
 
-> Em construção: esta etapa entrega a fundação (build, janela SDL2 e contrato de desenho de pixel).
+> Em construção: pipeline completo (malha → câmera → projeção → rasterização *scan line*) com controles, presets de câmera e testes; faltam dump BMP e CI.
 
 ## Requisitos
 
@@ -19,7 +19,7 @@ Atalhos via `Makefile`:
 ```sh
 make build                  # configura e compila
 make dev                    # compila e executa a aplicação
-make run ARGS="models/maca.byu camera/camera.txt"
+make run ARGS="models/maca.byu camera/presets/maca.txt"
 make smoke                  # verificação headless (exit 0)
 make test                   # roda os testes (CTest)
 make clean                  # remove build/
@@ -31,8 +31,10 @@ Equivalentes com CMake puro:
 cmake -S . -B build
 cmake --build build
 cmake --build build --target run      # também: smoke, check
-./build/cpu-renderer                  # modelo e câmera padrão (models/piramide.byu, camera/camera.txt)
-./build/cpu-renderer models/maca.byu camera/camera.txt
+./build/cpu-renderer                  # padrão: models/piramide.byu + camera/presets/piramide.txt
+./build/cpu-renderer models/maca.byu camera/presets/maca.txt
+./build/cpu-renderer models/triangulo.byu camera/camera.txt   # exemplo do PDF
+./build/cpu-renderer --fullscreen     # inicia em tela cheia
 SDL_VIDEODRIVER=dummy ./build/cpu-renderer --smoke
 ctest --test-dir build --output-on-failure
 ```
@@ -41,8 +43,15 @@ ctest --test-dir build --output-on-failure
 
 | Tecla | Ação |
 |-------|------|
-| `R` | Recarrega `camera.txt` e redesenha |
+| `1`–`6` | Troca modelo + preset (triangulo, piramide, maca, maca2, vaso, calice2) |
+| `R` | Recarrega o arquivo de câmera corrente e redesenha |
+| `D` | Alterna modo pontos |
+| `W` | Alterna modo arame |
+| `+` / `-` | Zoom (aumenta/diminui `d`) |
+| `F11` | Alterna tela cheia |
 | `Esc` / `Q` | Encerra a aplicação |
+
+A janela é redimensionável e o desenho acompanha o tamanho real (maximizar preenche a área toda).
 
 ## Estrutura do repositório
 

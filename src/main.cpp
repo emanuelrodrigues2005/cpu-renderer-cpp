@@ -87,6 +87,7 @@ int main(int argc, char** argv) {
     bool smokeTest = false;
     bool testPattern = false;
     bool showInfo = false;
+    bool startFullscreen = false;
     std::string modelPath = kDefaultModelPath;
     std::string cameraPath = kDefaultCameraPath;
     int positionalCount = 0;
@@ -99,6 +100,8 @@ int main(int argc, char** argv) {
             testPattern = true;
         } else if (arg == "--info") {
             showInfo = true;
+        } else if (arg == "--fullscreen") {
+            startFullscreen = true;
         } else if (positionalCount == 0) {
             modelPath = arg;
             ++positionalCount;
@@ -128,6 +131,9 @@ int main(int argc, char** argv) {
     if (!window.isValid()) {
         return EXIT_FAILURE;
     }
+    if (startFullscreen) {
+        window.toggleFullscreen();
+    }
 
     cg::RenderMode mode = cg::RenderMode::Filled;
     const auto redraw = [&]() {
@@ -153,12 +159,16 @@ int main(int argc, char** argv) {
             if (event.type == SDL_QUIT) {
                 running = false;
             } else if (event.type == SDL_WINDOWEVENT &&
-                       event.window.event == SDL_WINDOWEVENT_EXPOSED) {
+                       (event.window.event == SDL_WINDOWEVENT_EXPOSED ||
+                        event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)) {
                 redraw();
             } else if (event.type == SDL_KEYDOWN) {
                 const SDL_Keycode key = event.key.keysym.sym;
                 if (key == SDLK_ESCAPE || key == SDLK_q) {
                     running = false;
+                } else if (key == SDLK_F11) {
+                    window.toggleFullscreen();
+                    redraw();
                 } else if (key == SDLK_r) {
                     if (loadCamera(cameraPath, camera)) {
                         redraw();
