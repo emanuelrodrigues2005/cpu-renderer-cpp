@@ -29,10 +29,7 @@ WindowSDL::WindowSDL(const std::string& title, int width, int height)
         return;
     }
 
-    renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
-    if (renderer_ == nullptr) {
-        renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_SOFTWARE);
-    }
+    renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_SOFTWARE);
     if (renderer_ == nullptr) {
         SDL_Log("SDL_CreateRenderer failed: %s", SDL_GetError());
     }
@@ -62,15 +59,27 @@ void WindowSDL::syncSize() {
 
 void WindowSDL::clear(std::uint32_t color) {
     syncSize();
-    setDrawColor(renderer_, color);
-    SDL_RenderClear(renderer_);
+    if (renderer_ == nullptr || width_ <= 0 || height_ <= 0) {
+        return;
+    }
+
+    for (int y = 0; y < height_; ++y) {
+        for (int x = 0; x < width_; ++x) {
+            drawPixel(x, y, color);
+        }
+    }
 }
 
 void WindowSDL::drawPixel(int x, int y, std::uint32_t color) {
-    if (x < 0 || y < 0 || x >= width_ || y >= height_) {
+    if (renderer_ == nullptr || x < 0 || y < 0 || x >= width_ || y >= height_) {
         return;
     }
-    setDrawColor(renderer_, color);
+
+    if (!hasDrawColor_ || drawColor_ != color) {
+        setDrawColor(renderer_, color);
+        drawColor_ = color;
+        hasDrawColor_ = true;
+    }
     SDL_RenderDrawPoint(renderer_, x, y);
 }
 

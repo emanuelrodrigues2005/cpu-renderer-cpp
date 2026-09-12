@@ -37,6 +37,8 @@ private:
     int width_ = 0;
     int height_ = 0;
     bool fullscreen_ = false;
+    bool hasDrawColor_ = false;
+    std::uint32_t drawColor_ = 0;
 };
 
 }

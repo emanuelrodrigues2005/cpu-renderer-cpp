@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <utility>
 
 #include <SDL2/SDL.h>
 
@@ -211,8 +212,12 @@ int main(int argc, char** argv) {
                     redraw();
                 } else if (key >= SDLK_1 && key <= SDLK_6) {
                     const int index = static_cast<int>(key - SDLK_1);
-                    if (loadModel(kModelPresets[index].model, mesh) &&
-                        loadCamera(kModelPresets[index].camera, camera)) {
+                    cg::Mesh loadedMesh;
+                    cg::Camera loadedCamera;
+                    if (loadModel(kModelPresets[index].model, loadedMesh) &&
+                        loadCamera(kModelPresets[index].camera, loadedCamera)) {
+                        mesh = std::move(loadedMesh);
+                        camera = loadedCamera;
                         modelPath = kModelPresets[index].model;
                         cameraPath = kModelPresets[index].camera;
                         redraw();

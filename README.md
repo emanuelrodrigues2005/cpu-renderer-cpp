@@ -98,8 +98,9 @@ C = 0 -500 500  # centro da câmera
 ## Testes e verificação
 
 ```sh
-make test    # 12 suítes: mesh, vec3, camera, projection, rasterizer, renderer, bmp_writer,
-             # info_sucesso, info_arquivo_inexistente, smoke, dump_sucesso, dump_modelo_inexistente
+make test    # 14 suítes: mesh, vec3, camera, projection, rasterizer, renderer, bmp_writer,
+             # info_sucesso, info_arquivo_inexistente, smoke, dump_sucesso,
+             # dump_modelo_inexistente, sdl_backend_policy, default_render_mode
 make smoke   # executa o pipeline headless e exige exit 0
 ```
 

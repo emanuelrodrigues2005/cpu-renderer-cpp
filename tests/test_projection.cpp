@@ -41,6 +41,21 @@ void formulas_conferem_com_calculo_manual() {
     CHECK_EQ(screen.y, 450);
 }
 
+void projecao_separa_coordenadas_normalizadas_da_tela() {
+    cg::NormalizedPoint normalized;
+    const bool ok = cg::projectToNormalized(
+        cg::Vec3{1.0F, -1.0F, 5.0F}, cameraDoPdf(), normalized);
+
+    CHECK(ok);
+    CHECK_EQ(normalized.x, 0.5F);
+    CHECK_EQ(normalized.y, -0.5F);
+
+    cg::ScreenPoint screen;
+    cg::normalizedToScreen(normalized, 800, 600, screen);
+    CHECK_EQ(screen.x, 600);
+    CHECK_EQ(screen.y, 450);
+}
+
 void ponto_atras_da_camera_nao_e_visivel() {
     cg::ScreenPoint screen{-1, -1};
 
@@ -106,6 +121,7 @@ void camera_e_projecao_com_o_exemplo_do_pdf() {
 int main() {
     centro_da_vista_projeta_no_centro_da_tela();
     formulas_conferem_com_calculo_manual();
+    projecao_separa_coordenadas_normalizadas_da_tela();
     ponto_atras_da_camera_nao_e_visivel();
     arredondamento_usa_lround();
     coordenadas_fora_da_janela_nao_sao_limitadas();
