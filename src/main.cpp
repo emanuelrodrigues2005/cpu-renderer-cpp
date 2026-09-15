@@ -18,20 +18,15 @@ namespace {
 constexpr int kWindowWidth = 800;
 constexpr int kWindowHeight = 600;
 constexpr const char* kDefaultModelPath = "models/piramide.byu";
-constexpr const char* kDefaultCameraPath = "camera/presets/piramide.txt";
+constexpr const char* kDefaultCameraPath = "camera/camera.txt";
 
-struct ModelPreset {
-    const char* model;
-    const char* camera;
-};
-
-const ModelPreset kModelPresets[] = {
-    {"models/triangulo.byu", "camera/presets/triangulo.txt"},
-    {"models/piramide.byu", "camera/presets/piramide.txt"},
-    {"models/maca.byu", "camera/presets/maca.txt"},
-    {"models/maca2.byu", "camera/presets/maca2.txt"},
-    {"models/vaso.byu", "camera/presets/vaso.txt"},
-    {"models/calice2.byu", "camera/presets/calice2.txt"},
+constexpr const char* kModelPaths[] = {
+    "models/triangulo.byu",
+    "models/piramide.byu",
+    "models/maca.byu",
+    "models/maca2.byu",
+    "models/vaso.byu",
+    "models/calice2.byu",
 };
 
 void drawTestPattern(cg::WindowSDL& window) {
@@ -213,13 +208,9 @@ int main(int argc, char** argv) {
                 } else if (key >= SDLK_1 && key <= SDLK_6) {
                     const int index = static_cast<int>(key - SDLK_1);
                     cg::Mesh loadedMesh;
-                    cg::Camera loadedCamera;
-                    if (loadModel(kModelPresets[index].model, loadedMesh) &&
-                        loadCamera(kModelPresets[index].camera, loadedCamera)) {
+                    if (loadModel(kModelPaths[index], loadedMesh)) {
                         mesh = std::move(loadedMesh);
-                        camera = loadedCamera;
-                        modelPath = kModelPresets[index].model;
-                        cameraPath = kModelPresets[index].camera;
+                        modelPath = kModelPaths[index];
                         redraw();
                     }
                 }

@@ -18,8 +18,8 @@ Atalhos via `Makefile`:
 
 ```sh
 make build                  # configura e compila
-make dev                    # compila e executa (padrão: piramide + preset)
-make run ARGS="models/maca.byu camera/presets/maca.txt"
+make dev                    # compila e executa (padrão: piramide + camera/camera.txt)
+make run ARGS="models/maca.byu"                # malha com a câmera padrão
 make smoke                  # verificação headless (exit 0)
 make test                   # roda os testes (CTest)
 make clean                  # remove build/
@@ -37,12 +37,12 @@ ctest --test-dir build --output-on-failure
 Exemplos da aplicação:
 
 ```sh
-./build/cpu-renderer                  # padrão: models/piramide.byu + camera/presets/piramide.txt
-./build/cpu-renderer models/maca.byu camera/presets/maca.txt
-./build/cpu-renderer models/triangulo.byu camera/camera.txt   # exemplo do PDF
+./build/cpu-renderer                  # padrão: models/piramide.byu + camera/camera.txt
+./build/cpu-renderer models/maca.byu  # malha com a câmera padrão
+./build/cpu-renderer models/triangulo.byu camera/camera.txt   # câmera explícita (exemplo do PDF)
 ./build/cpu-renderer --fullscreen     # inicia em tela cheia
 ./build/cpu-renderer --info models/vaso.byu                   # contagens de vértices/triângulos
-./build/cpu-renderer --dump saida.bmp models/vaso.byu camera/presets/vaso.txt
+./build/cpu-renderer --dump saida.bmp models/vaso.byu         # BMP com a câmera padrão
 SDL_VIDEODRIVER=dummy ./build/cpu-renderer --smoke
 ```
 
@@ -52,8 +52,8 @@ Argumentos: `[modelo.byu] [camera.txt]` (opcionais, com os padrões acima) e as 
 
 | Tecla | Ação |
 |-------|------|
-| `1`–`6` | Troca modelo + preset (triangulo, piramide, maca, maca2, vaso, calice2) |
-| `R` | Recarrega o arquivo de câmera corrente (o preset do modelo atual, após `1`–`6`) |
+| `1`–`6` | Troca a malha (triangulo, piramide, maca, maca2, vaso, calice2); a câmera é compartilhada |
+| `R` | Recarrega o arquivo de câmera corrente (`camera/camera.txt` ou o caminho passado na CLI) |
 | `D` | Alterna modo pontos |
 | `W` | Alterna modo arame |
 | `+` / `-` | Zoom (aumenta/diminui `d`) |
@@ -64,7 +64,7 @@ A janela é redimensionável e o desenho acompanha o tamanho real (maximizar pre
 
 ## Parâmetros da câmera
 
-`camera/camera.txt` é o exemplo do PDF; `camera/presets/` traz um arquivo calibrado por modelo. Formato (rótulos, ordem livre, `=` ou `:`, comentários com `#`, maiúsculas ou minúsculas):
+`camera/camera.txt` é o arquivo único de câmera, compartilhado por todos os modelos (exemplo do PDF). Formato (rótulos, ordem livre, `=` ou `:`, comentários com `#`, maiúsculas ou minúsculas):
 
 ```
 N = 0 1 -1      # direção da câmera para a cena (é normalizada)
@@ -77,14 +77,16 @@ C = 0 -500 500  # centro da câmera
 
 `U` é calculado (`normalize(V × N)`) e não é lido do arquivo. Câmeras degeneradas (vetor nulo ou `V` paralelo a `N`) e escalares não positivos são rejeitados com mensagem.
 
-| Tecla | Malha | Preset |
-|-------|-------|--------|
-| `1` | `models/triangulo.byu` | `camera/presets/triangulo.txt` |
-| `2` | `models/piramide.byu` | `camera/presets/piramide.txt` |
-| `3` | `models/maca.byu` | `camera/presets/maca.txt` |
-| `4` | `models/maca2.byu` | `camera/presets/maca2.txt` |
-| `5` | `models/vaso.byu` | `camera/presets/vaso.txt` |
-| `6` | `models/calice2.byu` | `camera/presets/calice2.txt` |
+| Tecla | Malha |
+|-------|-------|
+| `1` | `models/triangulo.byu` |
+| `2` | `models/piramide.byu` |
+| `3` | `models/maca.byu` |
+| `4` | `models/maca2.byu` |
+| `5` | `models/vaso.byu` |
+| `6` | `models/calice2.byu` |
+
+A câmera é a mesma para todos os modelos: `camera/camera.txt` (ou o caminho passado na CLI).
 
 ## Como o pipeline funciona
 
@@ -98,9 +100,10 @@ C = 0 -500 500  # centro da câmera
 ## Testes e verificação
 
 ```sh
-make test    # 14 suítes: mesh, vec3, camera, projection, rasterizer, renderer, bmp_writer,
+make test    # 16 suítes: mesh, vec3, camera, projection, rasterizer, renderer, bmp_writer,
              # info_sucesso, info_arquivo_inexistente, smoke, dump_sucesso,
-             # dump_modelo_inexistente, sdl_backend_policy, default_render_mode
+             # dump_modelo_inexistente, camera_padrao, camera_policy,
+             # sdl_backend_policy, default_render_mode
 make smoke   # executa o pipeline headless e exige exit 0
 ```
 
@@ -109,11 +112,11 @@ Critérios de aceitação do levantamento (§9) e como verificar:
 | Critério | Verificação |
 |---|---|
 | Arquivos BYU carregados corretamente | `--info`, testes `mesh` (6 modelos) |
-| Câmera configurável | `camera/presets/*.txt` + `R`; testes `camera` |
+| Câmera configurável | `camera/camera.txt` compartilhado + `R`; testes `camera` e `camera_padrao` |
 | Vértices projetados corretamente | testes `projection` e `renderer` (valores calculados à mão) |
 | Triângulos convertidos para pixels | testes `rasterizer` (contagem exata de pixels) |
 | Rasterização preenche na tela | `make dev` |
-| Diferentes modelos renderizáveis | teclas `1`–`6` / presets |
+| Diferentes modelos renderizáveis | teclas `1`–`6` (câmera compartilhada) |
 
 ## Estrutura do repositório
 
@@ -124,7 +127,7 @@ src/
 ├── pipeline/   câmera, projeção, rasterização e renderer
 └── canvas/     Canvas, janela SDL, canvas em memória e escrita BMP
 models/         malhas BYU de exemplo
-camera/         camera.txt (exemplo do PDF) e presets/ calibrados por modelo
+camera/         camera.txt (arquivo único de câmera, exemplo do PDF)
 tests/          testes automatizados (CTest)
 ```
 
@@ -134,5 +137,5 @@ tests/          testes automatizados (CTest)
 ## Documentação
 
 - `CONTEXT.md` — glossário do domínio
-- `docs/` — levantamento de requisitos, especificação da 1ª VA e ADRs 0001–0005 (local, não versionado)
+- `docs/` — levantamento de requisitos, especificação da 1ª VA e ADRs 0001–0006 (local, não versionado)
 - `AGENTS.md` — diretrizes para agentes e colaboradores (local, não versionado)

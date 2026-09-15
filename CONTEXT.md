@@ -51,9 +51,9 @@ _Avoid_: flood fill, z-buffer
 **Recarga da câmera**:
 Releitura de `camera.txt` em tempo de execução, sem reiniciar a aplicação; em caso de erro, a última câmera válida é mantida.
 
-**Preset de câmera**:
-Arquivo `camera/presets/<malha>.txt` com parâmetros calibrados para enquadrar a malha na janela.
-_Avoid_: câmera padrão
+**Câmera compartilhada**:
+Único arquivo `camera/camera.txt` usado por todas as malhas; trocar de malha não altera a câmera, e `R` a relê para a visualização corrente.
+_Avoid_: preset de câmera, câmera por modelo
 
 **Canvas**:
 Destino de desenho que expõe apenas `clear` e `drawPixel`.

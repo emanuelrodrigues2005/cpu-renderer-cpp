@@ -156,11 +156,31 @@ set_tests_properties(dump_modelo_inexistente PROPERTIES
     TIMEOUT 10
 )
 
+add_test(NAME camera_padrao
+         COMMAND ${CMAKE_COMMAND}
+                 -DCPU_RENDERER=$<TARGET_FILE:cpu-renderer>
+                 -DPROJECT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+                 -DOUTPUT_DIR=${CMAKE_BINARY_DIR}
+                 -P ${CMAKE_SOURCE_DIR}/tests/check_default_camera.cmake)
+set_tests_properties(camera_padrao PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    TIMEOUT 10
+)
+
 add_test(NAME sdl_backend_policy
          COMMAND ${CMAKE_COMMAND}
                  -DPROJECT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
                  -P ${CMAKE_SOURCE_DIR}/tests/check_sdl_backend.cmake)
 set_tests_properties(sdl_backend_policy PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    TIMEOUT 10
+)
+
+add_test(NAME camera_policy
+         COMMAND ${CMAKE_COMMAND}
+                 -DPROJECT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+                 -P ${CMAKE_SOURCE_DIR}/tests/check_camera_policy.cmake)
+set_tests_properties(camera_policy PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     TIMEOUT 10
 )

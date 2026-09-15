@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <cstdint>
 #include <string>
 
@@ -119,46 +118,6 @@ void modo_arame_desenha_arestas() {
     CHECK(!white(canvas, 500, 250));
 }
 
-void modelos_com_presets_preenchem_a_janela() {
-    const struct {
-        const char* model;
-        const char* camera;
-    } cases[] = {
-        {"models/triangulo.byu", "camera/presets/triangulo.txt"},
-        {"models/piramide.byu", "camera/presets/piramide.txt"},
-        {"models/maca.byu", "camera/presets/maca.txt"},
-        {"models/maca2.byu", "camera/presets/maca2.txt"},
-        {"models/vaso.byu", "camera/presets/vaso.txt"},
-        {"models/calice2.byu", "camera/presets/calice2.txt"},
-    };
-
-    for (const auto& testCase : cases) {
-        cg::Camera camera;
-        std::string error;
-        CHECK(cg::loadCameraFromFile(testCase.camera, camera, error));
-
-        cg::Mesh mesh;
-        CHECK(cg::loadMeshFromFile(testCase.model, mesh, error));
-
-        cg::MemoryCanvas canvas{800, 600};
-        cg::renderMesh(mesh, camera, canvas);
-
-        int top = canvas.height();
-        int bottom = -1;
-        for (int y = 0; y < canvas.height(); ++y) {
-            for (int x = 0; x < canvas.width(); ++x) {
-                if (white(canvas, x, y)) {
-                    top = std::min(top, y);
-                    bottom = std::max(bottom, y);
-                }
-            }
-        }
-
-        const int coverage = bottom >= 0 ? bottom - top + 1 : 0;
-        CHECK(coverage >= canvas.height() * 60 / 100);
-    }
-}
-
 }
 
 int main() {
@@ -167,7 +126,6 @@ int main() {
     modelos_reais_renderizam_com_a_camera_do_pdf();
     modo_pontos_desenha_apenas_vertices();
     modo_arame_desenha_arestas();
-    modelos_com_presets_preenchem_a_janela();
 
     return test::failureCount() == 0 ? 0 : 1;
 }
