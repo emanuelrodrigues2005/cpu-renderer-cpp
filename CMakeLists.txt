@@ -204,6 +204,19 @@ target_compile_options(test_color PRIVATE -Wall -Wextra -Wpedantic)
 
 add_test(NAME color COMMAND test_color)
 
+add_executable(test_lighting
+    tests/test_lighting.cpp
+    src/shading/Lighting.cpp
+    src/math/Color.cpp
+    src/math/Vec3.cpp
+)
+
+target_include_directories(test_lighting PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_lighting PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME lighting COMMAND test_lighting)
+set_tests_properties(lighting PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 add_custom_target(run
     COMMAND cpu-renderer
     DEPENDS cpu-renderer
@@ -221,6 +234,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer test_renderer test_bmp_writer test_color
+    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer test_renderer test_bmp_writer test_color test_lighting
     USES_TERMINAL
 )
