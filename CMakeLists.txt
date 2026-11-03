@@ -11,6 +11,7 @@ find_package(SDL2 REQUIRED)
 add_executable(cpu-renderer
     src/main.cpp
     src/mesh/Mesh.cpp
+    src/mesh/Normals.cpp
     src/math/Vec3.cpp
     src/pipeline/Camera.cpp
     src/pipeline/Projection.cpp
@@ -217,6 +218,19 @@ target_compile_options(test_lighting PRIVATE -Wall -Wextra -Wpedantic)
 add_test(NAME lighting COMMAND test_lighting)
 set_tests_properties(lighting PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+add_executable(test_normals
+    tests/test_normals.cpp
+    src/mesh/Normals.cpp
+    src/mesh/Mesh.cpp
+    src/math/Vec3.cpp
+)
+
+target_include_directories(test_normals PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_normals PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME normals COMMAND test_normals)
+set_tests_properties(normals PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 add_custom_target(run
     COMMAND cpu-renderer
     DEPENDS cpu-renderer
@@ -234,6 +248,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer test_renderer test_bmp_writer test_color test_lighting
+    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer test_renderer test_bmp_writer test_color test_lighting test_normals
     USES_TERMINAL
 )

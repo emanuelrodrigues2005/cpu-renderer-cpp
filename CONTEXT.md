@@ -29,7 +29,7 @@ Ponto de origem do sistema de coordenadas de vista.
 _Avoid_: eixos da câmera
 
 **Coordenadas de mundo**:
-Sistema em que os vértices da malha estão definidos.
+Sistema em que os vértices da malha e as normais estão definidos.
 _Avoid_: espaço global
 
 **Coordenadas de vista**:
@@ -43,6 +43,12 @@ Coordenadas 2D do plano de projeção escaladas pelos limites `hx` e `hy`, no in
 
 **Coordenadas de tela**:
 Coordenadas de pixel resultantes da conversão das normalizadas para a janela, com `y` crescendo para baixo.
+
+**Normal de face**:
+Vetor unitário perpendicular a um triângulo, calculado pelo produto vetorial de duas arestas.
+
+**Normal de vértice**:
+Normal suave de um vértice, obtida pela média normalizada das normais das faces incidentes.
 
 **Scan line**:
 Preenchimento de um triângulo projetado por varredura: para cada linha horizontal, calcula as interseções com as arestas e pinta o intervalo entre elas.
