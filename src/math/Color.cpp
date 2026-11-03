@@ -7,12 +7,15 @@ namespace cg {
 
 namespace {
 
-std::uint32_t packChannel(float value) {
+float clampChannel(float value) {
     if (std::isnan(value)) {
-        return 0U;
+        return 0.0F;
     }
-    const float clamped = std::clamp(value, 0.0F, 255.0F);
-    return static_cast<std::uint32_t>(std::lround(clamped));
+    return std::clamp(value, 0.0F, 255.0F);
+}
+
+std::uint32_t packChannel(float value) {
+    return static_cast<std::uint32_t>(std::lround(clampChannel(value)));
 }
 
 }
@@ -26,8 +29,7 @@ Color Color::operator*(float scalar) const {
 }
 
 Color Color::clamped() const {
-    return Color{std::clamp(r, 0.0F, 255.0F), std::clamp(g, 0.0F, 255.0F),
-                 std::clamp(b, 0.0F, 255.0F)};
+    return Color{clampChannel(r), clampChannel(g), clampChannel(b)};
 }
 
 std::uint32_t Color::packed() const {

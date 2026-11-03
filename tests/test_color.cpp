@@ -53,6 +53,16 @@ void clamp_retorna_canais_no_intervalo() {
     CHECK_EQ(color.b, 255.0F);
 }
 
+void clamp_trata_canais_nao_finitos() {
+    const float nan = std::numeric_limits<float>::quiet_NaN();
+    const float inf = std::numeric_limits<float>::infinity();
+    const cg::Color cor = cg::Color{nan, inf, -inf}.clamped();
+
+    CHECK_EQ(cor.r, 0.0F);
+    CHECK_EQ(cor.g, 255.0F);
+    CHECK_EQ(cor.b, 0.0F);
+}
+
 void canais_nao_finitos_nao_produzem_bits_invalidos() {
     const float nan = std::numeric_limits<float>::quiet_NaN();
     const float inf = std::numeric_limits<float>::infinity();
@@ -68,6 +78,7 @@ int main() {
     canais_sao_limitados_e_arredondados();
     soma_e_escala_funcionam_por_componente();
     clamp_retorna_canais_no_intervalo();
+    clamp_trata_canais_nao_finitos();
     canais_nao_finitos_nao_produzem_bits_invalidos();
 
     return test::failureCount() == 0 ? 0 : 1;
