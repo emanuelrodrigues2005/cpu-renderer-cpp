@@ -48,7 +48,7 @@ Coordenadas de pixel resultantes da conversão das normalizadas para a janela, c
 Vetor unitário perpendicular a um triângulo, calculado pelo produto vetorial de duas arestas.
 
 **Normal de vértice**:
-Normal suave de um vértice, obtida pela média normalizada das normais das faces incidentes.
+Normal suave de um vértice, obtida pela média não ponderada (soma das normais unitárias das faces incidentes, depois normalizada); vértice sem faces incidentes tem normal nula.
 
 **Scan line**:
 Preenchimento de um triângulo projetado por varredura: para cada linha horizontal, calcula as interseções com as arestas e pinta o intervalo entre elas.

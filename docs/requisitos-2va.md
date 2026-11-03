@@ -27,7 +27,7 @@ A leitura deve ser estrita (regras na seção 3.4), atômica e reportar erros em
 
 ### RF10 — Calcular normais
 
-Calcular a normal de cada face pelo produto vetorial das arestas e a normal de cada vértice pela média normalizada das normais das faces incidentes. Regras verificáveis:
+Calcular a normal de cada face pelo produto vetorial das arestas e a normal de cada vértice pela média não ponderada das normais unitárias das faces incidentes, seguida de normalização. Regras verificáveis:
 
 - faces degeneradas ou de vetor nulo não contribuem;
 - vértice sem faces válidas fica com normal nula;

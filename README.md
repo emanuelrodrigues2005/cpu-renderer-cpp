@@ -100,9 +100,9 @@ A câmera é a mesma para todos os modelos: `camera/camera.txt` (ou o caminho pa
 ## Testes e verificação
 
 ```sh
-make test    # 16 suítes: mesh, vec3, camera, projection, rasterizer, renderer, bmp_writer,
-             # info_sucesso, info_arquivo_inexistente, smoke, dump_sucesso,
-             # dump_modelo_inexistente, camera_padrao, camera_policy,
+make test    # 19 suítes: mesh, vec3, color, normals, camera, projection, lighting,
+             # rasterizer, renderer, bmp_writer, info_sucesso, info_arquivo_inexistente,
+             # smoke, dump_sucesso, dump_modelo_inexistente, camera_padrao, camera_policy,
              # sdl_backend_policy, default_render_mode
 make smoke   # executa o pipeline headless e exige exit 0
 ```
@@ -122,20 +122,24 @@ Critérios de aceitação do levantamento (§9) e como verificar:
 
 ```
 src/
-├── math/       Vec3
-├── mesh/       leitura e armazenamento BYU
+├── math/       Vec3 e Color
+├── mesh/       leitura BYU e normais
 ├── pipeline/   câmera, projeção, rasterização e renderer
+├── shading/    parâmetros de iluminação
 └── canvas/     Canvas, janela SDL, canvas em memória e escrita BMP
 models/         malhas BYU de exemplo
 camera/         camera.txt (arquivo único de câmera, exemplo do PDF)
+lighting/       arquivos de iluminação (lighting.txt e exemplo do PDF)
 tests/          testes automatizados (CTest)
+docs/           levantamento, especificações, requisitos e ADRs (versionado)
 ```
 
-> `docs/` (levantamento, especificação da 1ª VA e ADRs) e `AGENTS.md` são documentos locais de trabalho, mantidos fora do repositório.
+> `docs/` é versionado. `AGENTS.md` é documento local de trabalho, não versionado.
+> `src/shading/` e `lighting/` contêm a base de iluminação da 2ª VA; a integração no app é das milestones seguintes.
 > O levantamento (§5) sugere `src/` plano; o projeto agrupa os mesmos módulos por camada, sem alterar responsabilidades ou interfaces.
 
 ## Documentação
 
 - `CONTEXT.md` — glossário do domínio
-- `docs/` — levantamento de requisitos, especificação da 1ª VA e ADRs 0001–0006 (local, não versionado)
+- `docs/` — levantamento, especificações e requisitos das 1ª e 2ª VAs, e ADRs 0001–0006 (versionado)
 - `AGENTS.md` — diretrizes para agentes e colaboradores (local, não versionado)
