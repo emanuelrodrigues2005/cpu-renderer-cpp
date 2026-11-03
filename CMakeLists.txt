@@ -194,6 +194,16 @@ set_tests_properties(default_render_mode PROPERTIES
     TIMEOUT 10
 )
 
+add_executable(test_color
+    tests/test_color.cpp
+    src/math/Color.cpp
+)
+
+target_include_directories(test_color PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_color PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME color COMMAND test_color)
+
 add_custom_target(run
     COMMAND cpu-renderer
     DEPENDS cpu-renderer
@@ -211,6 +221,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer test_renderer test_bmp_writer
+    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer test_renderer test_bmp_writer test_color
     USES_TERMINAL
 )
