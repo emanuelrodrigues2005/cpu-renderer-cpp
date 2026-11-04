@@ -23,7 +23,7 @@ Carregar de arquivo texto os oito parâmetros:
 
 A leitura deve ser estrita (regras na seção 3.4), atômica e reportar erros em português. Arquivo inválido não pode alterar a iluminação anteriormente válida.
 
-*Origem: PDF/slides (parâmetros); projeto (faixas numéricas e validação estrita).*
+*Origem: PDF/slides (parâmetros); projeto (faixas numéricas e validação estrita); ADR-0010 (arquivos separados e carga atômica).*
 
 ### RF10 — Calcular normais
 
@@ -34,7 +34,7 @@ Calcular a normal de cada face pelo produto vetorial das arestas e a normal de c
 - normal não finita é rejeitada e substituída por vetor nulo;
 - o resultado deve ser sempre finito.
 
-*Origem: projeto (derivado da equação de Phong do PDF, que exige `N`; o formato BYU não traz normais).*
+*Origem: projeto (derivado da equação de Phong do PDF, que exige `N`; o formato BYU não traz normais); ADR-0008.*
 
 ### RF11 — Iluminação de Phong
 
@@ -57,13 +57,13 @@ Aplicar as três regras de iluminação two-sided:
 
 O resultado é limitado por canal a `[0,255]`, com arredondamento e sem correção gamma.
 
-*Origem: PDF/slides (equação e two-sided); projeto/AGENTS (V de vista, clamp com arredondamento, sem gamma).*
+*Origem: PDF/slides (equação e two-sided); projeto/AGENTS (V de vista, clamp com arredondamento, sem gamma); ADR-0007.*
 
 ### RF12 — Tonalização de Phong
 
 Interpolar a posição de mundo e a normal por pixel, com correção de perspectiva, e calcular a iluminação de Phong (RF11) para cada pixel visível. A normal interpolada deve ser normalizada; se for nula, usar a normal da face.
 
-*Origem: PDF (tonalização de Phong); projeto (correção de perspectiva, normalização e fallback).*
+*Origem: PDF (tonalização de Phong); projeto (correção de perspectiva, normalização e fallback); ADR-0007, ADR-0008 e ADR-0009.*
 
 ### RF13 — Z-buffer
 
@@ -75,7 +75,7 @@ Manter um buffer de profundidade por pixel no caminho iluminado. Armazenar `invZ
 
 Rasterizar cada triângulo projetado por varredura: ordenar por `y`, calcular as interseções com as arestas não horizontais e preencher o intervalo entre elas. A interpolação de atributos deve usar `invZ` (RF13) para correção de perspectiva; **nunca** interpolar `z` linearmente em tela.
 
-*Origem: PDF (scan line); projeto/ADR-0005 (cobertura); projeto/AGENTS/ADR-0009 (invZ).*
+*Origem: PDF (scan line); projeto/ADR-0005 (cobertura, superada pela ADR-0009 na visibilidade); projeto/AGENTS/ADR-0009 (invZ e interpolação).*
 
 ### RF15 — Recarga da configuração
 
@@ -83,7 +83,7 @@ O usuário deve poder alterar os valores no(s) arquivo(s) de configuração corr
 
 Cada fonte de configuração (câmera e iluminação) é carregada atomicamente; erro preserva o último valor válido daquela fonte e reporta no `stderr`. A falha na recarga de uma fonte não pode invalidar a outra. O objeto deve ser redesenhado se ao menos uma fonte recarregar com sucesso.
 
-*Origem: PDF (recarga e redesenho sem reiniciar); projeto (caminhos correntes, tecla de recarga e atomicidade).*
+*Origem: PDF (recarga e redesenho sem reiniciar); projeto (caminhos correntes, tecla de recarga e atomicidade); ADR-0010.*
 
 ### RF16 — Integração e saída
 
@@ -91,7 +91,7 @@ Manter os controles existentes (`D`, `W`, `+`/`-`, `1`–`6`, `F11`, `Esc`/`Q`),
 
 Os caminhos padrão de malha, câmera e iluminação são definidos pela configuração do projeto (origem: projeto) e podem ser substituídos pelos argumentos posicionais da linha de comando.
 
-*Origem: projeto/regressão da 1ª VA.*
+*Origem: projeto/regressão da 1ª VA; ADR-0010 (CLI e caminhos).*
 
 ## 2. Requisitos não funcionais
 
@@ -124,7 +124,7 @@ Um redesenho completo no pipeline headless — `renderMesh` com `MemoryCanvas`, 
 - Casos especiais: (a) `N·L < 0` e `V·N < 0` → inverter `N`; (b) se ainda `N·L < 0` → sem difusa e sem especular; (c) `R·V < 0` → sem especular.
 - Clamp final por canal em `[0,255]`, com arredondamento; sem gamma.
 
-*Origem: PDF/slides (equação e two-sided); projeto/AGENTS (V de vista, clamp com arredondamento, sem gamma).*
+*Origem: PDF/slides (equação e two-sided); projeto/AGENTS (V de vista, clamp com arredondamento, sem gamma); ADR-0007.*
 
 ### 3.2 Interpolação e normais
 
@@ -133,7 +133,7 @@ Um redesenho completo no pipeline headless — `renderMesh` com `MemoryCanvas`, 
 - Normalizar a normal após interpolar; se ela for nula, usar a normal da face.
 - Faces degeneradas ou de vetor nulo não contribuem; vértice sem faces válidas fica com normal nula; normal não finita é rejeitada e substituída por vetor nulo; o resultado é sempre finito.
 
-*Origem: projeto/AGENTS; ADR-0009.*
+*Origem: projeto/AGENTS; ADR-0008 (normais) e ADR-0009 (interpolação).*
 
 ### 3.3 Z-buffer e scan line
 
@@ -143,7 +143,7 @@ Um redesenho completo no pipeline headless — `renderMesh` com `MemoryCanvas`, 
 - Z-buffer apenas no caminho iluminado; `Points` e `Wireframe` continuam sem profundidade e sem iluminação.
 - Não ordenar triângulos por baricentro: a visibilidade é resolvida pelo z-buffer.
 
-*Origem: PDF (z-buffer e scan line); projeto/ADR-0005 (cobertura); projeto/AGENTS/ADR-0009 (invZ e modos de depuração).*
+*Origem: PDF (z-buffer e scan line); projeto/ADR-0005 (cobertura, superada pela ADR-0009 na visibilidade); projeto/AGENTS/ADR-0009 (invZ e modos de depuração).*
 
 ### 3.4 Parser e recarga
 
@@ -156,7 +156,7 @@ Um redesenho completo no pipeline headless — `renderMesh` com `MemoryCanvas`, 
 - O arquivo de câmera mantém as regras da 1ª VA (seis campos, base ortonormal e escalares positivos).
 - `R` recarrega câmera e iluminação a partir dos caminhos correntes; a troca de malha não recarrega nem troca a configuração.
 
-*Origem: PDF (recarga); projeto (validação estrita, mensagens e atomicidade); ADR-0002 e ADR-0004; ADR-0006 (câmera compartilhada).*
+*Origem: PDF (recarga); projeto (validação estrita, mensagens e atomicidade); ADR-0002 e ADR-0004; ADR-0010 (dois arquivos, CLI e recarga); ADR-0006 (câmera compartilhada).*
 
 ### 3.5 Integração e saída
 
@@ -167,7 +167,7 @@ Um redesenho completo no pipeline headless — `renderMesh` com `MemoryCanvas`, 
 - `--dump` e `--smoke` usam o caminho iluminado.
 - Os caminhos padrão são fornecidos pela configuração do projeto e substituíveis na linha de comando.
 
-*Origem: projeto/regressão da 1ª VA.*
+*Origem: projeto/regressão da 1ª VA; ADR-0010 (CLI e caminhos).*
 
 ## 4. Critérios de aceitação da 2ª VA
 
@@ -236,14 +236,14 @@ Com a câmera padrão (`d = 5`), `triangulo` e `piramide` ficariam abaixo de 500
 
 | Requisito | Issue | Origem |
 |---|---|---|
-| RF09 | #20 | PDF/slides (parâmetros); projeto (faixas e validação) |
-| RF10 | #21 | projeto (derivado do Phong) |
-| RF11 | #23 | PDF/slides (equação e two-sided); projeto/AGENTS (V de vista, clamp, sem gamma) |
-| RF12 | #24, #25 | PDF (tonalização); projeto (interpolação) |
-| RF13 | #22, #24 | PDF (z-buffer); projeto/AGENTS (invZ, empate) |
-| RF14 | #24 | PDF (scan line); projeto/ADR-0005 (cobertura); projeto/AGENTS/ADR-0009 (invZ) |
-| RF15 | #26 | PDF (recarga); projeto (caminhos, tecla, atomicidade) |
-| RF16 | #26, #27 | projeto/regressão da 1ª VA |
+| RF09 | #20 | PDF/slides (parâmetros); projeto (faixas e validação); projeto/ADR-0010 (arquivos separados e atomicidade) |
+| RF10 | #21 | projeto (derivado do Phong); projeto/ADR-0008 |
+| RF11 | #23 | PDF/slides (equação e two-sided); projeto/AGENTS (V de vista, clamp, sem gamma); projeto/ADR-0007 |
+| RF12 | #24, #25 | PDF (tonalização); projeto (interpolação); projeto/ADR-0008/0009 |
+| RF13 | #22, #24 | PDF (z-buffer); projeto/AGENTS (invZ, empate); projeto/ADR-0009 |
+| RF14 | #24 | PDF (scan line); projeto/ADR-0005 (cobertura, superada pela 0009 na visibilidade); projeto/AGENTS/ADR-0009 (invZ) |
+| RF15 | #26 | PDF (recarga); projeto (caminhos, tecla, atomicidade); projeto/ADR-0010 |
+| RF16 | #26, #27 | projeto/regressão da 1ª VA; projeto/ADR-0010 (CLI) |
 | RNF04 | #30 | PDF (pixel/bibliotecas); projeto/1VA (C++17); projeto/ADR-0001 (SDL2) |
 | RNF05 | #27 | projeto/ADR-0003 |
 | RNF06 | #27 | projeto |
@@ -257,12 +257,14 @@ Com a câmera padrão (`d = 5`), `triangulo` e `piramide` ficariam abaixo de 500
 
 ## 7. Decisões de implementação (não são requisitos)
 
-Estas decisões estão registradas em `docs/especificacao-2va.md`; as ADRs 0007 e 0009 são criadas nesta milestone, e as ADRs 0008 e 0010 em #29. Elas não devem ser lidas como exigências do PDF.
+Estas decisões estão registradas em `docs/especificacao-2va.md`; as ADRs 0007 e 0009 são atualizadas nesta milestone e as ADRs 0008 e 0010 são criadas nela, de modo que as ADRs 0007–0010 estão registradas no repositório. Elas não devem ser lidas como exigências do PDF.
 
 - **Somente Phong shading.** Flat e Gouraud ficam fora do escopo desta entrega (ADR-0007).
-- **Dois arquivos de configuração.** Câmera e iluminação são carregadas de arquivos separados, com caminhos padrão definidos pelo projeto e substituíveis na linha de comando. A câmera é única e compartilhada (ADR-0006).
-- **Arquivos padrão e calibração.** A existência, o conteúdo e a calibração de `lighting/lighting.txt` e `lighting/lighting-pdf.txt` são entregues pela issue #20; o requisito apenas exige carregar o arquivo corrente.
+- **Modelo de iluminação de Phong.** Equações, faixas, regras two-sided, clamp e casos especiais estão na ADR-0007.
+- **Normais de face e de vértice e two-sided.** O cálculo das normais, a média não ponderada, o fallback e a inversão de `N` estão na ADR-0008.
+- **Dois arquivos de configuração.** Câmera e iluminação são carregadas de arquivos separados, com caminhos padrão definidos pelo projeto e substituíveis na linha de comando. A câmera é única e compartilhada (ADR-0006; arquivos, CLI e recarga na ADR-0010).
+- **Arquivos padrão e calibração.** A existência, o conteúdo e a calibração de `lighting/lighting.txt` e `lighting/lighting-pdf.txt` são entregues pela issue #20; o requisito apenas exige carregar o arquivo corrente (ADR-0010).
 - **Redraw event-driven.** O redesenho ocorre em resposta a eventos, sem laço de animação contínuo (ADR-0001).
 - **SDL2 só para janela e pixel.** A biblioteca externa permitida é exclusivamente a função de desenho de pixel, conforme ADR-0001.
-- **Luz pontual única.** A fonte de luz é pontual, em coordenadas de mundo, sem atenuação.
-- **Z-buffer e scan line com atributos.** A especialização do scan line para atributos e a profundidade por `invZ` estão formalizadas na ADR-0009, complementando a ADR-0005.
+- **Luz pontual única.** A fonte de luz é pontual, em coordenadas de mundo, sem atenuação (ADR-0007).
+- **Z-buffer e scan line com atributos.** A especialização do scan line para atributos e a profundidade por `invZ` estão formalizadas na ADR-0009; ela supera a ADR-0005 apenas no aspecto de visibilidade e mantém as convenções de varredura.

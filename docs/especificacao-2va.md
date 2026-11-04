@@ -51,7 +51,9 @@ O usuário deve ser capaz de alterar os valores dos parâmetros no arquivo texto
 
 ## Decisões de implementação (não fazem parte do enunciado)
 
-- O projeto usa C++17 e SDL2 apenas para janela e desenho de pixel.
-- Câmera e iluminação são carregadas de dois arquivos separados; `R` recarrega ambos.
-- O modelo de tonalização implementado é Phong shading; flat e Gouraud ficam fora do escopo desta entrega.
-- A luz é pontual, em coordenadas de mundo, sem atenuação.
+- O projeto usa C++17 e SDL2 apenas para janela e desenho de pixel (ADR-0001).
+- Câmera e iluminação são carregadas de dois arquivos separados; `R` recarrega ambos (ADR-0006 e ADR-0010).
+- O modelo de tonalização implementado é Phong shading; flat e Gouraud ficam fora do escopo desta entrega (ADR-0007).
+- A luz é pontual, em coordenadas de mundo, sem atenuação (ADR-0007).
+- As normais de face e de vértice, a média não ponderada, o fallback e as regras two-sided estão na ADR-0008.
+- A visibilidade usa z-buffer com `invZ` e a interpolação perspectiva-correta está na ADR-0009.
