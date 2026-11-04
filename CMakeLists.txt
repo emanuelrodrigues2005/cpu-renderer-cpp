@@ -169,6 +169,62 @@ target_compile_options(test_renderer_phong PRIVATE -Wall -Wextra -Wpedantic)
 add_test(NAME renderer_phong COMMAND test_renderer_phong)
 set_tests_properties(renderer_phong PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+add_executable(test_model_coverage
+    tests/test_model_coverage.cpp
+    src/pipeline/Renderer.cpp
+    src/pipeline/Rasterizer.cpp
+    src/pipeline/ShadedRasterizer.cpp
+    src/pipeline/Projection.cpp
+    src/pipeline/Camera.cpp
+    src/pipeline/DepthBuffer.cpp
+    src/shading/Phong.cpp
+    src/shading/Lighting.cpp
+    src/math/Color.cpp
+    src/math/Vec3.cpp
+    src/mesh/Mesh.cpp
+    src/mesh/Normals.cpp
+    src/canvas/MemoryCanvas.cpp
+)
+
+target_include_directories(test_model_coverage PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_model_coverage PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME model_coverage COMMAND test_model_coverage)
+set_tests_properties(model_coverage PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    TIMEOUT 30
+)
+
+add_executable(test_performance
+    tests/test_performance.cpp
+    src/pipeline/Renderer.cpp
+    src/pipeline/Rasterizer.cpp
+    src/pipeline/ShadedRasterizer.cpp
+    src/pipeline/Projection.cpp
+    src/pipeline/Camera.cpp
+    src/pipeline/DepthBuffer.cpp
+    src/shading/Phong.cpp
+    src/shading/Lighting.cpp
+    src/math/Color.cpp
+    src/math/Vec3.cpp
+    src/mesh/Mesh.cpp
+    src/mesh/Normals.cpp
+    src/canvas/MemoryCanvas.cpp
+)
+
+target_include_directories(test_performance PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_performance PRIVATE -Wall -Wextra -Wpedantic)
+if(NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(test_performance PRIVATE -O3 -DNDEBUG)
+endif()
+
+add_test(NAME performance COMMAND test_performance)
+set_tests_properties(performance PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    TIMEOUT 120
+    RUN_SERIAL TRUE
+)
+
 add_executable(test_bmp_writer
     tests/test_bmp_writer.cpp
     src/canvas/BmpWriter.cpp
@@ -396,6 +452,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_depth_buffer test_rasterizer test_shaded_rasterizer test_renderer test_renderer_phong test_bmp_writer test_color test_lighting test_normals test_phong
+    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_depth_buffer test_rasterizer test_shaded_rasterizer test_renderer test_renderer_phong test_model_coverage test_performance test_bmp_writer test_color test_lighting test_normals test_phong
     USES_TERMINAL
 )

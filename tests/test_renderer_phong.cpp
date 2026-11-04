@@ -284,6 +284,35 @@ void eye_usa_centro_da_camera_em_mundo() {
     CHECK(maxChannelDifference(canvas.pixelAt(400, 300), viewExpected.packed()) > 5);
 }
 
+void two_sided_face_com_normal_invertida_recebe_luz() {
+    const cg::Camera camera = cameraSintetica();
+    const cg::Lighting lighting =
+        difusa(cg::Color{255.0F, 255.0F, 255.0F}, cg::Vec3{0.0F, 0.0F, -10.0F});
+    const cg::Vec3 pontoInterior{0.5F, 0.5F, 5.0F};
+    const cg::Vec3 normalInvertida{0.0F, 0.0F, -1.0F};
+    const cg::Color esperado = cg::phongColor(pontoInterior, normalInvertida, camera.c, lighting);
+    CHECK_EQ(esperado.packed(), cg::kWhite);
+
+    constexpr int kPixelInteriorX = 500;
+    constexpr int kPixelInteriorY = 225;
+
+    cg::MemoryCanvas normaisParaLonge{800, 600};
+    cg::renderMesh(malhaTriangulo(5.0F), camera, lighting, normaisParaLonge);
+    CHECK(countNonBlack(normaisParaLonge) > 0);
+    const std::uint32_t corInterior =
+        normaisParaLonge.pixelAt(kPixelInteriorX, kPixelInteriorY);
+    CHECK(maxChannelDifference(corInterior, esperado.packed()) <= 1);
+
+    cg::Mesh windingInvertido = malhaTriangulo(5.0F);
+    windingInvertido.triangles[0] = cg::Triangle{0, 2, 1};
+    cg::MemoryCanvas normaisParaCamera{800, 600};
+    cg::renderMesh(windingInvertido, camera, lighting, normaisParaCamera);
+    CHECK(countNonBlack(normaisParaCamera) > 0);
+    const std::uint32_t corControle =
+        normaisParaCamera.pixelAt(kPixelInteriorX, kPixelInteriorY);
+    CHECK(maxChannelDifference(corControle, esperado.packed()) <= 1);
+}
+
 void normais_de_vertice_diferem_de_face() {
     const cg::Vec3 a{-1.0F, 0.0F, 5.0F};
     const cg::Vec3 b{1.0F, 0.0F, 5.0F};
@@ -405,6 +434,7 @@ int main() {
     caminho_legado_permanece_branco();
     iluminacao_usa_centro_da_camera_em_mundo();
     eye_usa_centro_da_camera_em_mundo();
+    two_sided_face_com_normal_invertida_recebe_luz();
     normais_de_vertice_diferem_de_face();
     triangulo_com_vertice_atras_da_camera_e_descartado();
     modelos_reais_renderizam_com_phong();
