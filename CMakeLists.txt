@@ -241,6 +241,18 @@ target_compile_options(test_normals PRIVATE -Wall -Wextra -Wpedantic)
 add_test(NAME normals COMMAND test_normals)
 set_tests_properties(normals PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+add_executable(test_phong
+    tests/test_phong.cpp
+    src/shading/Phong.cpp
+    src/math/Color.cpp
+    src/math/Vec3.cpp
+)
+
+target_include_directories(test_phong PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_phong PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME phong COMMAND test_phong)
+
 add_custom_target(run
     COMMAND cpu-renderer
     DEPENDS cpu-renderer
@@ -258,6 +270,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_depth_buffer test_rasterizer test_renderer test_bmp_writer test_color test_lighting test_normals
+    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_depth_buffer test_rasterizer test_renderer test_bmp_writer test_color test_lighting test_normals test_phong
     USES_TERMINAL
 )

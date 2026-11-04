@@ -29,7 +29,7 @@ Ponto de origem do sistema de coordenadas de vista.
 _Avoid_: eixos da câmera
 
 **Coordenadas de mundo**:
-Sistema em que os vértices da malha e as normais estão definidos.
+Sistema em que os vértices da malha, as normais e a fonte de luz estão definidos.
 _Avoid_: espaço global
 
 **Coordenadas de vista**:
@@ -55,6 +55,35 @@ Vetor unitário perpendicular a um triângulo, calculado pelo produto vetorial d
 
 **Normal de vértice**:
 Normal suave de um vértice, obtida pela média não ponderada (soma das normais unitárias das faces incidentes, depois normalizada); vértice sem faces incidentes tem normal nula.
+
+**Iluminação de Phong**:
+Modelo local que combina reflexão ambiente, difusa e especular para determinar a cor de um ponto.
+
+**Componente ambiente**:
+Parcela `Ia = Ka · Iamb`, presente mesmo sem incidência direta de luz.
+
+**Componente difusa**:
+Parcela `Id = max(N·L, 0) · Kd ∗ Od ∗ Il`, proporcional ao cosseno do ângulo de incidência.
+
+**Componente especular**:
+Parcela `Is = max(R·V, 0)^eta · Ks · Il`, dependente da direção de vista e do expoente `eta`.
+
+**Fonte de luz**:
+Luz pontual em coordenadas de mundo, definida pela posição `Pl` e pela cor `Il`.
+
+**Material**:
+Conjunto de coeficientes e cores que caracterizam a superfície: `Ka`, `Kd`, `Od`, `Ks` e `eta`.
+
+**Vetor L**:
+Direção unitária do ponto iluminado para a fonte de luz.
+_Avoid_: vetor de luz da câmera
+
+**Vetor V (iluminação)**:
+Direção unitária do ponto iluminado para a câmera; não é o vetor `V` da base da câmera.
+_Avoid_: V da câmera
+
+**Vetor R**:
+Direção unitária de reflexão da luz incidente em relação à normal.
 
 **Scan line**:
 Preenchimento de um triângulo projetado por varredura: para cada linha horizontal, calcula as interseções com as arestas e pinta o intervalo entre elas.
