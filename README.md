@@ -206,8 +206,8 @@ CMakeLists.txt  configuração do build e registro dos testes
 ## Documentação
 
 - [CONTEXT.md](CONTEXT.md) — glossário do domínio.
-- [AGENTS.md](AGENTS.md) — diretrizes para agentes e colaboradores (versionado; a verificação final é a issue #30).
+- [AGENTS.md](AGENTS.md) — diretrizes para agentes e colaboradores (versionado).
 - [docs/especificacao-1va.md](docs/especificacao-1va.md) e [docs/requisitos-1va.md](docs/requisitos-1va.md) — enunciado e requisitos da 1ª VA, que permanece como base.
 - [docs/especificacao-2va.md](docs/especificacao-2va.md) e [docs/requisitos-2va.md](docs/requisitos-2va.md) — enunciado e requisitos da 2ª VA, com a matriz de rastreabilidade e a evidência de cada critério.
-- ADRs versionadas: [0001](docs/adr/0001-contrato-pixel-sdl.md), [0002](docs/adr/0002-fronteira-carregamento-byu.md), [0003](docs/adr/0003-canvas-dual.md), [0004](docs/adr/0004-convencoes-coordenadas.md), [0005](docs/adr/0005-convencoes-scan-line.md), [0006](docs/adr/0006-camera-unica-compartilhada.md), [0007](docs/adr/0007-modelo-iluminacao-phong.md) e [0009](docs/adr/0009-z-buffer-interpolacao-perspectiva.md).
-- As ADRs 0008 e 0010 pertencem à issue #29 e ainda não existem. O PDF original da disciplina não é versionado; as transcrições em `docs/` são a referência local.
+- ADRs 0001–0010 versionadas: [0001](docs/adr/0001-contrato-pixel-sdl.md), [0002](docs/adr/0002-fronteira-carregamento-byu.md), [0003](docs/adr/0003-canvas-dual.md), [0004](docs/adr/0004-convencoes-coordenadas.md), [0005](docs/adr/0005-convencoes-scan-line.md), [0006](docs/adr/0006-camera-unica-compartilhada.md), [0007](docs/adr/0007-modelo-iluminacao-phong.md), [0008](docs/adr/0008-normais-face-vertice-two-sided.md), [0009](docs/adr/0009-z-buffer-interpolacao-perspectiva.md) e [0010](docs/adr/0010-camera-iluminacao-arquivos-separados.md).
+- O PDF original da disciplina não é versionado; as transcrições em `docs/` são a referência local.
