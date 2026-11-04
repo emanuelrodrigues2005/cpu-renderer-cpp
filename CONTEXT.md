@@ -1,6 +1,6 @@
 # CPU Renderer C++
 
-Pipeline gráfico implementado manualmente em CPU: carrega malhas de triângulos, aplica uma câmera virtual, projeta em perspectiva e rasteriza triângulos com *scan line*.
+Pipeline gráfico implementado manualmente em CPU: carrega malhas de triângulos, calcula normais, aplica uma câmera virtual, projeta em perspectiva, resolve visibilidade com z-buffer e rasteriza triângulos com *scan line*, calculando iluminação de Phong por pixel. A 1ª VA entregou a base (malha, câmera, projeção e rasterização); a 2ª VA acrescenta normais, z-buffer e iluminação/tonalização de Phong.
 
 ## Linguagem
 
@@ -77,6 +77,9 @@ Luz pontual em coordenadas de mundo, definida pela posição `Pl` e pela cor `Il
 **Material**:
 Conjunto de coeficientes e cores que caracterizam a superfície: `Ka`, `Kd`, `Od`, `Ks` e `eta`.
 
+**Arquivo de iluminação**:
+Arquivo texto com os oito parâmetros da iluminação: `Iamb`, `Ka`, `Il`, `Pl`, `Kd`, `Od`, `Ks` e `eta`. O padrão do projeto é `lighting/lighting.txt`; `lighting/lighting-pdf.txt` preserva o exemplo do PDF e não é o padrão.
+
 **Vetor L**:
 Direção unitária do ponto iluminado para a fonte de luz.
 _Avoid_: vetor de luz da câmera
@@ -96,25 +99,25 @@ Modelo de tonalização que interpola normais e posição por pixel e calcula a 
 _Avoid_: Gouraud, flat shading
 
 **Renderização iluminada**:
-Sobrecarga de `renderMesh` que recebe `Lighting`, calcula normais e profundidade e tonaliza com Phong por pixel.
+Renderização que recebe a iluminação da cena, calcula normais e profundidade e tonaliza cada pixel com Phong.
 
 **Caminho legado**:
-Sobrecarga de `renderMesh` sem iluminação, usada para cor sólida branca e modos de depuração.
+Renderização sem iluminação e sem profundidade, usada para preencher em branco e para os modos de depuração.
 
 **Scan line**:
 Preenchimento de um triângulo projetado por varredura: para cada linha horizontal, calcula as interseções com as arestas e pinta o intervalo entre elas.
 _Avoid_: flood fill
 
-**Recarga da configuração**:
-Releitura dos arquivos correntes de câmera e iluminação em tempo de execução, sem reiniciar a aplicação; cada arquivo é carregado atomicamente e, em caso de erro, o último valor válido daquela fonte é mantido.
+**Recarga da configuração** (também chamada de recarga da cena):
+Releitura dos arquivos correntes de câmera e iluminação pela tecla `R`, em tempo de execução, sem reiniciar a aplicação. Cada fonte é carregada atomicamente; erro em uma fonte preserva o último valor válido dessa fonte, reporta no `stderr` e não invalida a outra.
 _Avoid_: recarga da câmera
 
 **Câmera compartilhada**:
-Único arquivo `camera/camera.txt` usado por todas as malhas; trocar de malha não altera a câmera, e `R` a relê para a visualização corrente.
+Único arquivo `camera/camera.txt` usado por todas as malhas; trocar de malha não altera a câmera nem a iluminação, e `R` recarrega câmera e iluminação para a visualização corrente.
 _Avoid_: preset de câmera, câmera por modelo
 
 **Canvas**:
-Destino de desenho que expõe apenas `clear` e `drawPixel`.
+Destino de desenho que expõe `clear`, `drawPixel`, `width()` e `height()`.
 
 **Dump BMP**:
 Imagem gerada sem janela, usada para inspeção e testes automatizados.
