@@ -105,8 +105,9 @@ Sobrecarga de `renderMesh` sem iluminação, usada para cor sólida branca e mod
 Preenchimento de um triângulo projetado por varredura: para cada linha horizontal, calcula as interseções com as arestas e pinta o intervalo entre elas.
 _Avoid_: flood fill
 
-**Recarga da câmera**:
-Releitura de `camera.txt` em tempo de execução, sem reiniciar a aplicação; em caso de erro, a última câmera válida é mantida.
+**Recarga da configuração**:
+Releitura dos arquivos correntes de câmera e iluminação em tempo de execução, sem reiniciar a aplicação; cada arquivo é carregado atomicamente e, em caso de erro, o último valor válido daquela fonte é mantido.
+_Avoid_: recarga da câmera
 
 **Câmera compartilhada**:
 Único arquivo `camera/camera.txt` usado por todas as malhas; trocar de malha não altera a câmera, e `R` a relê para a visualização corrente.

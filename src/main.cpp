@@ -12,6 +12,7 @@
 #include "canvas/WindowSDL.h"
 #include "canvas/MemoryCanvas.h"
 #include "canvas/BmpWriter.h"
+#include "shading/Lighting.h"
 
 namespace {
 
@@ -19,6 +20,7 @@ constexpr int kWindowWidth = 800;
 constexpr int kWindowHeight = 600;
 constexpr const char* kDefaultModelPath = "models/piramide.byu";
 constexpr const char* kDefaultCameraPath = "camera/camera.txt";
+constexpr const char* kDefaultLightingPath = "lighting/lighting.txt";
 
 constexpr const char* kModelPaths[] = {
     "models/triangulo.byu",
@@ -79,6 +81,15 @@ bool loadCamera(const std::string& path, cg::Camera& camera) {
     return true;
 }
 
+bool loadLighting(const std::string& path, cg::Lighting& lighting) {
+    std::string error;
+    if (!cg::loadLightingFromFile(path, lighting, error)) {
+        std::cerr << "erro: " << error << "\n";
+        return false;
+    }
+    return true;
+}
+
 }
 
 int main(int argc, char** argv) {
@@ -89,6 +100,7 @@ int main(int argc, char** argv) {
     std::string dumpPath;
     std::string modelPath = kDefaultModelPath;
     std::string cameraPath = kDefaultCameraPath;
+    std::string lightingPath = kDefaultLightingPath;
     int positionalCount = 0;
 
     for (int i = 1; i < argc; ++i) {
@@ -113,6 +125,9 @@ int main(int argc, char** argv) {
         } else if (positionalCount == 1) {
             cameraPath = arg;
             ++positionalCount;
+        } else if (positionalCount == 2) {
+            lightingPath = arg;
+            ++positionalCount;
         } else {
             std::cerr << "argumento desconhecido: " << arg << "\n";
             return EXIT_FAILURE;
@@ -131,10 +146,14 @@ int main(int argc, char** argv) {
     if (!loadCamera(cameraPath, camera)) {
         return EXIT_FAILURE;
     }
+    cg::Lighting lighting;
+    if (!loadLighting(lightingPath, lighting)) {
+        return EXIT_FAILURE;
+    }
 
     if (!dumpPath.empty()) {
         cg::MemoryCanvas canvas{kWindowWidth, kWindowHeight};
-        cg::renderMesh(mesh, camera, canvas);
+        cg::renderMesh(mesh, camera, lighting, canvas);
 
         std::string error;
         if (!cg::writeBmp(dumpPath, canvas, error)) {
@@ -159,7 +178,7 @@ int main(int argc, char** argv) {
             window.clear(cg::kBlack);
             drawTestPattern(window);
         } else {
-            cg::renderMesh(mesh, camera, window, mode);
+            cg::renderMesh(mesh, camera, lighting, window, mode);
         }
         window.present();
     };
@@ -188,7 +207,9 @@ int main(int argc, char** argv) {
                     window.toggleFullscreen();
                     redraw();
                 } else if (key == SDLK_r) {
-                    if (loadCamera(cameraPath, camera)) {
+                    const bool cameraReloaded = loadCamera(cameraPath, camera);
+                    const bool lightingReloaded = loadLighting(lightingPath, lighting);
+                    if (cameraReloaded || lightingReloaded) {
                         redraw();
                     }
                 } else if (key == SDLK_d) {
