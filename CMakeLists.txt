@@ -101,6 +101,23 @@ target_compile_options(test_rasterizer PRIVATE -Wall -Wextra -Wpedantic)
 
 add_test(NAME rasterizer COMMAND test_rasterizer)
 
+add_executable(test_shaded_rasterizer
+    tests/test_shaded_rasterizer.cpp
+    src/pipeline/ShadedRasterizer.cpp
+    src/pipeline/DepthBuffer.cpp
+    src/pipeline/Rasterizer.cpp
+    src/shading/Phong.cpp
+    src/shading/Lighting.cpp
+    src/math/Color.cpp
+    src/math/Vec3.cpp
+    src/canvas/MemoryCanvas.cpp
+)
+
+target_include_directories(test_shaded_rasterizer PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_shaded_rasterizer PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME shaded_rasterizer COMMAND test_shaded_rasterizer)
+
 add_executable(test_renderer
     tests/test_renderer.cpp
     src/pipeline/Renderer.cpp
@@ -270,6 +287,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_depth_buffer test_rasterizer test_renderer test_bmp_writer test_color test_lighting test_normals test_phong
+    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_depth_buffer test_rasterizer test_shaded_rasterizer test_renderer test_bmp_writer test_color test_lighting test_normals test_phong
     USES_TERMINAL
 )

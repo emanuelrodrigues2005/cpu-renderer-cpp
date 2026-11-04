@@ -50,6 +50,9 @@ Buffer de profundidade por pixel que mantém a superfície mais próxima; o test
 **invZ**:
 Inverso da profundidade de vista (`1/z`), interpolado linearmente em coordenadas de tela; maior `invZ` indica fragmento mais próximo.
 
+**Interpolação perspectiva-correta**:
+Interpolação de atributos em coordenadas de tela ponderada por `1/z`, evitando distorções da interpolação linear.
+
 **Normal de face**:
 Vetor unitário perpendicular a um triângulo, calculado pelo produto vetorial de duas arestas.
 
@@ -84,6 +87,13 @@ _Avoid_: V da câmera
 
 **Vetor R**:
 Direção unitária de reflexão da luz incidente em relação à normal.
+
+**Modelo de tonalização**:
+Define quando o modelo de iluminação é aplicado e quais valores recebe: por face, por vértice ou por pixel.
+
+**Tonalização de Phong**:
+Modelo de tonalização que interpola normais e posição por pixel e calcula a iluminação em cada pixel visível.
+_Avoid_: Gouraud, flat shading
 
 **Scan line**:
 Preenchimento de um triângulo projetado por varredura: para cada linha horizontal, calcula as interseções com as arestas e pinta o intervalo entre elas.
