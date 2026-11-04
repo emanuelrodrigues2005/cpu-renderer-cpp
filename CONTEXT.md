@@ -44,6 +44,12 @@ Coordenadas 2D do plano de projeção escaladas pelos limites `hx` e `hy`, no in
 **Coordenadas de tela**:
 Coordenadas de pixel resultantes da conversão das normalizadas para a janela, com `y` crescendo para baixo.
 
+**Z-buffer**:
+Buffer de profundidade por pixel que mantém a superfície mais próxima; o teste de profundidade decide qual fragmento é desenhado.
+
+**invZ**:
+Inverso da profundidade de vista (`1/z`), interpolado linearmente em coordenadas de tela; maior `invZ` indica fragmento mais próximo.
+
 **Normal de face**:
 Vetor unitário perpendicular a um triângulo, calculado pelo produto vetorial de duas arestas.
 
@@ -52,7 +58,7 @@ Normal suave de um vértice, obtida pela média não ponderada (soma das normais
 
 **Scan line**:
 Preenchimento de um triângulo projetado por varredura: para cada linha horizontal, calcula as interseções com as arestas e pinta o intervalo entre elas.
-_Avoid_: flood fill, z-buffer
+_Avoid_: flood fill
 
 **Recarga da câmera**:
 Releitura de `camera.txt` em tempo de execução, sem reiniciar a aplicação; em caso de erro, a última câmera válida é mantida.

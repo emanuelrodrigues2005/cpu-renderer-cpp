@@ -15,6 +15,12 @@ struct ScreenPoint {
     int y = 0;
 };
 
+struct ProjectedVertex {
+    ScreenPoint screen;
+    float viewZ = 0.0F;
+    float invZ = 0.0F;
+};
+
 bool projectToNormalized(const Vec3& viewPoint, const Camera& camera,
                          NormalizedPoint& normalized);
 
@@ -23,5 +29,8 @@ void normalizedToScreen(const NormalizedPoint& normalized, int width, int height
 
 bool projectToScreen(const Vec3& viewPoint, const Camera& camera, int width, int height,
                      ScreenPoint& screen);
+
+bool projectToScreenWithDepth(const Vec3& viewPoint, const Camera& camera, int width, int height,
+                              ProjectedVertex& projected);
 
 }

@@ -80,6 +80,16 @@ target_compile_options(test_projection PRIVATE -Wall -Wextra -Wpedantic)
 add_test(NAME projection COMMAND test_projection)
 set_tests_properties(projection PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+add_executable(test_depth_buffer
+    tests/test_depth_buffer.cpp
+    src/pipeline/DepthBuffer.cpp
+)
+
+target_include_directories(test_depth_buffer PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(test_depth_buffer PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME depth_buffer COMMAND test_depth_buffer)
+
 add_executable(test_rasterizer
     tests/test_rasterizer.cpp
     src/pipeline/Rasterizer.cpp
@@ -248,6 +258,6 @@ add_custom_target(smoke
 
 add_custom_target(check
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_rasterizer test_renderer test_bmp_writer test_color test_lighting test_normals
+    DEPENDS cpu-renderer test_mesh test_vec3 test_camera test_projection test_depth_buffer test_rasterizer test_renderer test_bmp_writer test_color test_lighting test_normals
     USES_TERMINAL
 )
