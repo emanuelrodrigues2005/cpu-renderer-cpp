@@ -95,6 +95,12 @@ Define quando o modelo de iluminação é aplicado e quais valores recebe: por f
 Modelo de tonalização que interpola normais e posição por pixel e calcula a iluminação em cada pixel visível.
 _Avoid_: Gouraud, flat shading
 
+**Renderização iluminada**:
+Sobrecarga de `renderMesh` que recebe `Lighting`, calcula normais e profundidade e tonaliza com Phong por pixel.
+
+**Caminho legado**:
+Sobrecarga de `renderMesh` sem iluminação, usada para cor sólida branca e modos de depuração.
+
 **Scan line**:
 Preenchimento de um triângulo projetado por varredura: para cada linha horizontal, calcula as interseções com as arestas e pinta o intervalo entre elas.
 _Avoid_: flood fill
