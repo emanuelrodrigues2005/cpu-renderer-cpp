@@ -171,23 +171,66 @@ Um redesenho completo no pipeline headless — `renderMesh` com `MemoryCanvas`, 
 
 ## 4. Critérios de aceitação da 2ª VA
 
-- [ ] Carrega os 8 parâmetros de iluminação, com validação estrita (campos obrigatórios, sem duplicatas, sem tokens extras, valores finitos e dentro das faixas).
-- [ ] Arquivo de iluminação inválido gera erro em português citando campo e caminho, e preserva a última iluminação válida (teste de #20).
-- [ ] `R` recarrega câmera e iluminação pelos caminhos correntes sem reiniciar; cada fonte de configuração é carregada atomicamente, erro em uma preserva o último valor válido daquela fonte e reporta no `stderr`; o objeto é redesenhado se ao menos uma fonte recarregar com sucesso (teste de #26).
-- [ ] Caminhos alternativos informados na linha de comando são usados na carga e na recarga.
-- [ ] Calcula normais de face e de vértice para os 6 modelos; faces degeneradas ou de vetor nulo não contribuem; vértice sem faces válidas fica com normal nula; normal não finita é rejeitada e substituída por vetor nulo; todas as normais resultantes são finitas (teste de #21, incluindo caso de normal não finita).
-- [ ] Aplica a equação de Phong com ambiente, difusa e especular; o especular não é tingido por `Od` (teste de #23).
-- [ ] Aplica as regras two-sided: (a) inverte `N` quando `N·L < 0` e `V·N < 0`; (b) remove difusa e especular se ainda `N·L < 0`; (c) remove só o especular se `R·V < 0` (teste de #23).
-- [ ] Aplica clamp por canal em `[0,255]` com arredondamento e sem gamma (teste de #23).
-- [ ] Renderiza com tonalização de Phong por pixel: interpolação com `invZ`, normal normalizada e fallback para a normal da face (testes de #24 e #25).
-- [ ] Usa z-buffer com `invZ`: o fragmento mais próximo vence independentemente da ordem de desenho; empate mantém o primeiro (testes de #22 e #24).
-- [ ] Usa scan line para a cobertura dos triângulos, com interseções em arestas não horizontais e intervalo preenchido (teste de #24).
-- [ ] `Points` e `Wireframe` continuam sem profundidade e sem iluminação.
-- [ ] Os 6 modelos renderizam sem crash, com pelo menos 500 pixels não pretos e pelo menos 8 cores distintas por modelo, além de variação de cor entre pixels; um único pixel não é evidência suficiente (testes de #27).
-- [ ] `--dump`, `--smoke`, `--info`, `--test-pattern` e `--fullscreen` continuam funcionando.
-- [ ] Apenas SDL para janela/pixel; matemática, interpolação e rasterização manuais.
-- [ ] Redesenho headless (`renderMesh` + `MemoryCanvas`, sem SDL) em 800×600 em até 100 ms, mediana de 10 após aquecimento, build Release sem sanitizers, em x86-64 com pelo menos 4 núcleos e 8 GB de RAM; o desenho da janela não entra no orçamento (teste de #27).
-- [ ] Testes headless verdes e build sem warnings.
+Todos os critérios abaixo têm evidência rastreável. A seção 4.1 distingue explicitamente o que é **automatizado**, **estático** (inspeção de código por script CMake) e **manual** (requer janela/display ou procedimento documentado); evidência manual ou estática não é apresentada como teste automatizado.
+
+- [x] Carrega os 8 parâmetros de iluminação, com validação estrita (campos obrigatórios, sem duplicatas, sem tokens extras, valores finitos e dentro das faixas).
+- [x] Arquivo de iluminação inválido gera erro em português citando campo e caminho, e preserva a última iluminação válida (teste de #20).
+- [x] `R` recarrega câmera e iluminação pelos caminhos correntes sem reiniciar; cada fonte de configuração é carregada atomicamente, erro em uma preserva o último valor válido daquela fonte e reporta no `stderr`; o objeto é redesenhado se ao menos uma fonte recarregar com sucesso (teste de #26).
+- [x] Caminhos alternativos informados na linha de comando são usados na carga e na recarga.
+- [x] Calcula normais de face e de vértice para os 6 modelos; faces degeneradas ou de vetor nulo não contribuem; vértice sem faces válidas fica com normal nula; normal não finita é rejeitada e substituída por vetor nulo; todas as normais resultantes são finitas (teste de #21, incluindo caso de normal não finita).
+- [x] Aplica a equação de Phong com ambiente, difusa e especular; o especular não é tingido por `Od` (teste de #23).
+- [x] Aplica as regras two-sided: (a) inverte `N` quando `N·L < 0` e `V·N < 0`; (b) remove difusa e especular se ainda `N·L < 0`; (c) remove só o especular se `R·V < 0` (teste de #23).
+- [x] Aplica clamp por canal em `[0,255]` com arredondamento e sem gamma (teste de #23).
+- [x] Renderiza com tonalização de Phong por pixel: interpolação com `invZ`, normal normalizada e fallback para a normal da face (testes de #24 e #25).
+- [x] Usa z-buffer com `invZ`: o fragmento mais próximo vence independentemente da ordem de desenho; empate mantém o primeiro (testes de #22 e #24).
+- [x] Usa scan line para a cobertura dos triângulos, com interseções em arestas não horizontais e intervalo preenchido (teste de #24).
+- [x] `Points` e `Wireframe` continuam sem profundidade e sem iluminação.
+- [x] Os 6 modelos renderizam sem crash, com pelo menos 500 pixels não pretos e pelo menos 8 cores distintas por modelo, além de variação de cor entre pixels; um único pixel não é evidência suficiente (testes de #27).
+- [x] `--dump`, `--smoke`, `--info`, `--test-pattern` e `--fullscreen` continuam funcionando.
+- [x] Apenas SDL para janela/pixel; matemática, interpolação e rasterização manuais.
+- [x] Redesenho headless (`renderMesh` + `MemoryCanvas`, sem SDL) em 800×600 em até 100 ms, mediana de 10 após aquecimento, build Release sem sanitizers, em x86-64 com pelo menos 4 núcleos e 8 GB de RAM; o desenho da janela não entra no orçamento (teste de #27).
+- [x] Testes headless verdes e build sem warnings.
+
+### 4.1 Cobertura de testes
+
+A coluna **Tipo** classifica a evidência de cada critério. Testes CTest são **automatizados**; scripts que leem o código-fonte são **estáticos**; janela e inspeção visual são **manuais**. Alguns critérios combinam mais de um tipo.
+
+| # | Critério | Tipo | Evidência automatizada | Verificação manual |
+|---:|---|---|---|---|
+| 1 | Carrega os 8 parâmetros com validação estrita (obrigatórios, sem duplicatas, sem extras, finitos e nas faixas). | Automatizado | `lighting`; `lighting_invalido`; `lighting_inexistente`; `smoke_iluminacao_invalida`. | — |
+| 2 | Arquivo inválido gera erro em português citando campo e caminho e preserva a última iluminação válida. | Automatizado | `lighting` (`carga_invalida_preserva_o_estado_anterior` e mensagens campo/caminho); `lighting_invalido`; `lighting_inexistente`. | — |
+| 3 | `R` recarrega câmera e iluminação pelos caminhos correntes, atomicamente; erro preserva a fonte e redesenha se ao menos uma recarregar. | Automatizado (estático) + manual | `lighting_policy` (bloco de `SDLK_r` com `loadCamera(cameraPath, camera)`, `loadLighting(lightingPath, lighting)`, `cameraReloaded \|\| lightingReloaded` e `redraw()`); `camera_policy` (câmera compartilhada). | `R` ao vivo em ambiente com display; evidência X11 da #26. |
+| 4 | Caminhos alternativos da linha de comando usados na carga e na recarga. | Automatizado | `lighting_sucesso`; `lighting_padrao`; `lighting_invalido`; `lighting_inexistente`; `dump_sucesso`; `camera_padrao`; `lighting_policy` (recarga usa os caminhos correntes). | — |
+| 5 | Normais de face e de vértice nos 6 modelos; degeneradas/nulas não contribuem; não finitas rejeitadas; todas finitas. | Automatizado | `normals`; `model_coverage` (6 malhas reais renderizadas com normais calculadas). | — |
+| 6 | Equação de Phong com ambiente, difusa e especular; especular não tingido por `Od`. | Automatizado | `phong` (`ambiente_difusa_e_especular_conferem`, `especular_nao_e_tingido_por_od`); `renderer_phong` (`triangulo_sintetico_recebe_cor_ambiente_conhecida`, `cor_difusa_conhecida_e_nao_branca`). | — |
+| 7 | Regras two-sided (a), (b) e (c). | Automatizado | `phong` (`two_sided_inverte_normal_quando_nl_e_vn_negativos`, `sem_difusa_nem_especular_quando_luz_atras`, `sem_especular_quando_rv_negativo`); `renderer_phong` (`iluminacao_usa_centro_da_camera_em_mundo`, cobertura two-sided pré-existente; `two_sided_face_com_normal_invertida_recebe_luz`, regressão focada com pixel interior `(500,225)` e controle de winding). | — |
+| 8 | Clamp por canal em `[0,255]` com arredondamento e sem gamma. | Automatizado | `phong` (`canais_sao_limitados_e_arredondados`); `color`. | — |
+| 9 | Tonalização de Phong por pixel: interpolação com `invZ`, normal normalizada e fallback para a normal da face. | Automatizado | `shaded_rasterizer` (`atributos_sao_interpolados_em_perspectiva`, `normal_nula_usa_normal_da_face`, `normal_interpolada_e_renormalizada`); `renderer_phong` (`normais_de_vertice_diferem_de_face`); `model_coverage`. | — |
+| 10 | Z-buffer com `invZ`: mais próximo vence independentemente da ordem; empate mantém o primeiro. | Automatizado | `depth_buffer` (`maior_invz_vence`, `empate_mantem_o_primeiro`); `shaded_rasterizer` (`triangulo_mais_proximo_vence_independente_da_ordem`, `empate_de_profundidade_mantem_o_primeiro`); `renderer_phong` (`zbuffer_distingue_cor_do_distante`). | — |
+| 11 | Scan line com interseções em arestas não horizontais e intervalo preenchido. | Automatizado | `rasterizer`; `shaded_rasterizer` (`cobertura_identica_ao_fill_triangle_legado`, `clip_de_tela_nao_pinta_fora`). | — |
+| 12 | `Points` e `Wireframe` sem profundidade e sem iluminação. | Automatizado + estático | `renderer` (`modo_pontos_desenha_apenas_vertices`, `modo_arame_desenha_arestas`); `renderer_phong` (`points_e_wireframe_sao_iguais_ao_legado`, `caminho_legado_permanece_branco`); `default_render_mode`. | — |
+| 13 | 6 modelos sem crash, com pelo menos 500 pixels não pretos, 8 cores distintas e variação de cor; um pixel não é evidência. | Automatizado | `model_coverage` (800×600, câmera local `d = 20`; métricas abaixo); `renderer_phong` (`modelos_reais_renderizam_com_phong`, smoke 400×300 preservado). | — |
+| 14 | `--dump`, `--smoke`, `--info`, `--test-pattern` e `--fullscreen` continuam funcionando. | Automatizado + manual | `dump_sucesso`; `dump_modelo_inexistente`; `smoke`; `info_sucesso`; `info_fora_do_diretorio`; `info_arquivo_inexistente`; `lighting_sucesso`; `lighting_policy` (dump e smoke no caminho Phong). | `--test-pattern` e `--fullscreen` exigem janela/display: verificação manual em ambiente gráfico. |
+| 15 | Apenas SDL para janela/pixel; matemática, interpolação e rasterização manuais. | Estático + manual | `sdl_backend_policy` proíbe `SDL_RenderClear`, `SDL_RenderCopy`, `SDL_RenderDrawLine` e `SDL_RENDERER_ACCELERATED`, e exige `SDL_RenderDrawPoint` e `SDL_RENDERER_SOFTWARE`. | Revisão final de AGENTS e documentação é a issue #30. |
+| 16 | Redesenho headless em 800×600 em até 100 ms, mediana de 10 após aquecimento, build Release sem sanitizers, em x86-64 com pelo menos 4 núcleos e 8 GB de RAM. | Automatizado (build otimizada) | `performance` (6 modelos, `MemoryCanvas`, sem SDL; 2 aquecimentos + 10 medições; mediana ≤100 ms). | Máquina, compilador e flags completos registrados no relatório da #27; sem verificação manual adicional. |
+| 17 | Testes headless verdes e build sem warnings. | Automatizado | `ctest` 32/32; `cmake --build build` e alvo `check` sem warnings com `-Wall -Wextra -Wpedantic`; CI headless com `SDL_VIDEODRIVER=dummy`. | — |
+
+**Métricas de `model_coverage`.** A câmera é carregada de `camera/camera.txt` e copiada para uma variável local, alterando apenas `d = 20`; base `(U,V,N)` e centro `C` permanecem os do arquivo, e a câmera compartilhada do app não é alterada. A iluminação vem de `lighting/lighting.txt` e o canvas é `MemoryCanvas` 800×600. Os thresholds são 500 pixels não pretos, 8 cores distintas e faixa máxima de canal entre pixels não pretos ≥ 2.
+
+| Malha | Não pretos | Cores distintas | Faixa máxima de canal |
+|---|---:|---:|---:|
+| `triangulo` | 2.282 | 11 | 5 |
+| `piramide` | 7.293 | 53 | 30 |
+| `maca` | 140.864 | 266 | 112 |
+| `maca2` | 87.219 | 228 | 100 |
+| `vaso` | 216.232 | 2.741 | 215 |
+| `calice2` | 235.757 | 2.174 | 215 |
+
+Com a câmera padrão (`d = 5`), `triangulo` e `piramide` ficariam abaixo de 500 pixels não pretos; a cópia local com `d = 20` é específica da cobertura e não muda a câmera do app.
+
+**Procedimento de `performance` (RNF06).** O alvo mede `renderMesh` com `MemoryCanvas` 800×600, sem `WindowSDL`, SDL ou dump, usando `camera/camera.txt` e `lighting/lighting.txt`; são 2 redesenhos de aquecimento e 10 medições por modelo, com mediana comparada ao orçamento de 100 ms. O teste imprime mediana, mínimo e máximo, tem `TIMEOUT 120` e `RUN_SERIAL TRUE`. O alvo recebe `-O3 -DNDEBUG` quando `CMAKE_BUILD_TYPE` está vazio ou é `Debug`; em Release herda os flags globais `-O3 -DNDEBUG`, sem sobrescrever, e em `RelWithDebInfo`/`MinSizeRel` vale a otimização global. Na verificação local desta issue (build sem `CMAKE_BUILD_TYPE`), as medianas ficaram entre 0,30 ms e 26,15 ms; no build Release, a pior mediana foi 40,17 ms (`maca`). Ambos ficaram abaixo do orçamento de 100 ms. O relatório da #27 registra a máquina (Intel Core i7-1355U, 12 CPUs lógicas, 15 GiB de RAM, x86-64), o compilador (g++ 13.3.0) e as flags completas.
+
+**Verificações manuais remanescentes.** `R` ao vivo com display (evidência X11 da #26), `--test-pattern`, `--fullscreen` e os controles `D`, `W`, `+`/`-`, `1`–`6`, `F11`, `Esc`/`Q`. Os controles `1`–`6` trocam apenas a malha; câmera e iluminação permanecem compartilhadas. A automação headless não substitui essa inspeção visual.
 
 ## 5. Rastreabilidade
 
