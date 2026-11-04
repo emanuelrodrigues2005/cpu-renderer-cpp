@@ -187,6 +187,14 @@ set_tests_properties(info_sucesso PROPERTIES
     TIMEOUT 10
 )
 
+add_test(NAME info_fora_do_diretorio
+         COMMAND cpu-renderer --info ${CMAKE_SOURCE_DIR}/models/triangulo.byu)
+set_tests_properties(info_fora_do_diretorio PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    PASS_REGULAR_EXPRESSION "3 vértices, 1 triângulo"
+    TIMEOUT 10
+)
+
 add_test(NAME info_arquivo_inexistente COMMAND cpu-renderer --info models/inexistente.byu)
 set_tests_properties(info_arquivo_inexistente PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -252,6 +260,73 @@ add_test(NAME default_render_mode
                  -DPROJECT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
                  -P ${CMAKE_SOURCE_DIR}/tests/check_default_mode.cmake)
 set_tests_properties(default_render_mode PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    TIMEOUT 10
+)
+
+add_test(NAME lighting_policy
+         COMMAND ${CMAKE_COMMAND}
+                 -DPROJECT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+                 -P ${CMAKE_SOURCE_DIR}/tests/check_lighting_policy.cmake)
+set_tests_properties(lighting_policy PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    TIMEOUT 10
+)
+
+add_test(NAME lighting_padrao
+         COMMAND ${CMAKE_COMMAND}
+                 -DCPU_RENDERER=$<TARGET_FILE:cpu-renderer>
+                 -DPROJECT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+                 -DOUTPUT_DIR=${CMAKE_BINARY_DIR}
+                 -P ${CMAKE_SOURCE_DIR}/tests/check_default_lighting.cmake)
+set_tests_properties(lighting_padrao PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    TIMEOUT 10
+)
+
+add_test(NAME lighting_inexistente
+         COMMAND ${CMAKE_COMMAND}
+                 -DCPU_RENDERER=$<TARGET_FILE:cpu-renderer>
+                 -DPROJECT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+                 -DOUTPUT_DIR=${CMAKE_BINARY_DIR}
+                 -DCASO=ausente
+                 -P ${CMAKE_SOURCE_DIR}/tests/check_lighting_error.cmake)
+set_tests_properties(lighting_inexistente PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    TIMEOUT 10
+)
+
+add_test(NAME lighting_invalido
+         COMMAND ${CMAKE_COMMAND}
+                 -DCPU_RENDERER=$<TARGET_FILE:cpu-renderer>
+                 -DPROJECT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+                 -DOUTPUT_DIR=${CMAKE_BINARY_DIR}
+                 -DCASO=invalido
+                 -P ${CMAKE_SOURCE_DIR}/tests/check_lighting_error.cmake)
+set_tests_properties(lighting_invalido PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    TIMEOUT 10
+)
+
+add_test(NAME smoke_iluminacao_invalida
+         COMMAND ${CMAKE_COMMAND}
+                 -DCPU_RENDERER=$<TARGET_FILE:cpu-renderer>
+                 -DPROJECT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+                 -DOUTPUT_DIR=${CMAKE_BINARY_DIR}
+                 -DCASO=smoke_invalido
+                 -P ${CMAKE_SOURCE_DIR}/tests/check_lighting_error.cmake)
+set_tests_properties(smoke_iluminacao_invalida PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    TIMEOUT 10
+)
+
+add_test(NAME lighting_sucesso
+         COMMAND ${CMAKE_COMMAND}
+                 -DCPU_RENDERER=$<TARGET_FILE:cpu-renderer>
+                 -DPROJECT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+                 -DOUTPUT_DIR=${CMAKE_BINARY_DIR}
+                 -P ${CMAKE_SOURCE_DIR}/tests/check_lighting_success.cmake)
+set_tests_properties(lighting_sucesso PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     TIMEOUT 10
 )
