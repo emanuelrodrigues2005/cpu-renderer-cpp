@@ -100,12 +100,15 @@ A câmera é a mesma para todos os modelos: `camera/camera.txt` (ou o caminho pa
 ## Testes e verificação
 
 ```sh
-make test    # 19 suítes: mesh, vec3, color, normals, camera, projection, lighting,
-             # rasterizer, renderer, bmp_writer, info_sucesso, info_arquivo_inexistente,
-             # smoke, dump_sucesso, dump_modelo_inexistente, camera_padrao, camera_policy,
-             # sdl_backend_policy, default_render_mode
+make test    # 23 suítes: mesh, vec3, color, normals, camera, projection, depth_buffer,
+             # lighting, phong, rasterizer, shaded_rasterizer, renderer, renderer_phong,
+             # bmp_writer, info_sucesso, info_arquivo_inexistente, smoke, dump_sucesso,
+             # dump_modelo_inexistente, camera_padrao, camera_policy, sdl_backend_policy,
+             # default_render_mode
 make smoke   # executa o pipeline headless e exige exit 0
 ```
+
+> A milestone 5 adiciona o caminho iluminado (`renderMesh(..., Lighting, ...)`) com z-buffer e Phong por pixel. `make dev` e `--dump` ainda usam o caminho legado branco até a issue #26; os testes `renderer_phong` e `shaded_rasterizer` validam o caminho iluminado.
 
 Critérios de aceitação do levantamento (§9) e como verificar:
 
@@ -124,8 +127,8 @@ Critérios de aceitação do levantamento (§9) e como verificar:
 src/
 ├── math/       Vec3 e Color
 ├── mesh/       leitura BYU e normais
-├── pipeline/   câmera, projeção, rasterização e renderer
-├── shading/    parâmetros de iluminação
+├── pipeline/   câmera, projeção, profundidade, rasterização e renderer
+├── shading/    parâmetros de iluminação e equação de Phong
 └── canvas/     Canvas, janela SDL, canvas em memória e escrita BMP
 models/         malhas BYU de exemplo
 camera/         camera.txt (arquivo único de câmera, exemplo do PDF)
@@ -141,5 +144,5 @@ docs/           levantamento, especificações, requisitos e ADRs (versionado)
 ## Documentação
 
 - `CONTEXT.md` — glossário do domínio
-- `docs/` — levantamento, especificações e requisitos das 1ª e 2ª VAs, e ADRs 0001–0006 (versionado)
+- `docs/` — levantamento, especificações e requisitos das 1ª e 2ª VAs, e ADRs 0001–0007 e 0009 (versionado); 0008 e 0010 ficam para #29
 - `AGENTS.md` — diretrizes para agentes e colaboradores (local, não versionado)
