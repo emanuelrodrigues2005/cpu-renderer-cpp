@@ -115,7 +115,7 @@ Os oito campos são obrigatórios:
 
 O parser é estrito: exige todos os campos, sem chaves duplicadas, sem tokens extras e sem campos desconhecidos; todos os valores devem ser finitos e estar nas faixas acima. Erros são reportados em português, citando o campo e o caminho do arquivo, e a carga é atômica: um arquivo inválido preserva a última iluminação válida. Como na câmera, rótulos não diferenciam maiúsculas de minúsculas, a ordem é livre, `=` e `:` são aceitos e `#` inicia comentário.
 
-`lighting/lighting-pdf.txt` preserva o exemplo exato do PDF da 2ª VA (luz abaixo da origem); ele é um exemplo de referência e não é o arquivo padrão. A fonte de luz é pontual, definida em coordenadas de mundo, sem atenuação.
+`lighting/lighting-pdf.txt` preserva o exemplo exato do PDF da 2ª VA (luz em `Pl = 60 5 -10`); ele é um exemplo de referência e não é o arquivo padrão. A fonte de luz é pontual, definida em coordenadas de mundo, sem atenuação.
 
 ## Pipeline
 
@@ -167,7 +167,7 @@ ctest --test-dir build -N      # lista os 32 testes
 Os **32 testes** estão agrupados por unidade, integração e CLI/configuração:
 
 - **Unidade (12):** `mesh`, `vec3`, `color`, `normals`, `camera`, `projection`, `depth_buffer`, `rasterizer`, `shaded_rasterizer`, `lighting`, `phong`, `bmp_writer`.
-- **Integração e renderização (4):** `renderer`, `renderer_phong`, `model_coverage`, `performance`. `model_coverage` renderiza os 6 modelos reais com Phong e exige pelo menos 500 pixels não pretos, 8 cores distintas e variação de cor por modelo; `performance` mede o redesenho headless em 800×600 e exige mediana de até 100 ms.
+- **Integração e renderização (4):** `renderer`, `renderer_phong`, `model_coverage`, `performance`. `model_coverage` renderiza os 6 modelos reais com Phong, usando uma cópia local da câmera com `d = 20`, e exige pelo menos 500 pixels não pretos, 8 cores distintas e variação de cor por modelo; `performance` mede o redesenho headless em 800×600 e exige mediana de até 100 ms.
 - **CLI, configuração e políticas (16):** `info_sucesso`, `info_fora_do_diretorio`, `info_arquivo_inexistente`, `smoke`, `dump_sucesso`, `dump_modelo_inexistente`, `camera_padrao`, `sdl_backend_policy`, `camera_policy`, `default_render_mode`, `lighting_policy`, `lighting_padrao`, `lighting_inexistente`, `lighting_invalido`, `smoke_iluminacao_invalida`, `lighting_sucesso`.
 
 ## Critérios de aceitação da 2ª VA
@@ -180,7 +180,7 @@ A 2ª VA é considerada concluída quando, entre outros critérios detalhados em
 - a tonalização é Phong por pixel, com interpolação perspectiva-correta e normal interpolada renormalizada;
 - o z-buffer usa `invZ`, o fragmento mais próximo vence independentemente da ordem de desenho e o empate mantém o primeiro;
 - o scan line cobre os triângulos e os modos `Points`/`Wireframe` permanecem sem profundidade e sem iluminação;
-- os 6 modelos renderizam com pelo menos 500 pixels não pretos, 8 cores distintas e variação de cor;
+- os 6 modelos renderizam com pelo menos 500 pixels não pretos, 8 cores distintas e variação de cor no teste `model_coverage`, que usa uma cópia local da câmera com `d = 20`;
 - `--dump`, `--smoke`, `--info`, `--test-pattern` e `--fullscreen` continuam funcionando, e a SDL2 é usada apenas para janela e pixel;
 - o redesenho headless em 800×600 conclui em até 100 ms;
 - os 32 testes estão verdes e o build não tem warnings.
