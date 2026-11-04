@@ -69,7 +69,7 @@ Interpolar a posição de mundo e a normal por pixel, com correção de perspect
 
 Manter um buffer de profundidade por pixel no caminho iluminado. Armazenar `invZ = 1/z`; o maior `invZ` vence e o empate mantém o primeiro fragmento. A visibilidade não pode depender da ordem de desenho dos triângulos. Os modos de depuração `Points` e `Wireframe` permanecem sem profundidade e sem iluminação.
 
-*Origem: PDF (z-buffer); projeto/AGENTS (invZ, empate e caminho iluminado); ADR-0009 prevista em #29.*
+*Origem: PDF (z-buffer); projeto/AGENTS (invZ, empate e caminho iluminado); ADR-0009.*
 
 ### RF14 — Scan line
 
@@ -133,7 +133,7 @@ Um redesenho completo no pipeline headless — `renderMesh` com `MemoryCanvas`, 
 - Normalizar a normal após interpolar; se ela for nula, usar a normal da face.
 - Faces degeneradas ou de vetor nulo não contribuem; vértice sem faces válidas fica com normal nula; normal não finita é rejeitada e substituída por vetor nulo; o resultado é sempre finito.
 
-*Origem: projeto/AGENTS; ADR-0009 prevista em #29.*
+*Origem: projeto/AGENTS; ADR-0009.*
 
 ### 3.3 Z-buffer e scan line
 
@@ -214,12 +214,12 @@ Um redesenho completo no pipeline headless — `renderMesh` com `MemoryCanvas`, 
 
 ## 7. Decisões de implementação (não são requisitos)
 
-Estas decisões estão registradas em `docs/especificacao-2va.md` e serão formalizadas nas ADRs 0007–0010 (#29). Elas não devem ser lidas como exigências do PDF.
+Estas decisões estão registradas em `docs/especificacao-2va.md`; as ADRs 0007 e 0009 são criadas nesta milestone, e as ADRs 0008 e 0010 em #29. Elas não devem ser lidas como exigências do PDF.
 
-- **Somente Phong shading.** Flat e Gouraud ficam fora do escopo desta entrega (ADR-0007, prevista em #29).
+- **Somente Phong shading.** Flat e Gouraud ficam fora do escopo desta entrega (ADR-0007).
 - **Dois arquivos de configuração.** Câmera e iluminação são carregadas de arquivos separados, com caminhos padrão definidos pelo projeto e substituíveis na linha de comando. A câmera é única e compartilhada (ADR-0006).
 - **Arquivos padrão e calibração.** A existência, o conteúdo e a calibração de `lighting/lighting.txt` e `lighting/lighting-pdf.txt` são entregues pela issue #20; o requisito apenas exige carregar o arquivo corrente.
 - **Redraw event-driven.** O redesenho ocorre em resposta a eventos, sem laço de animação contínuo (ADR-0001).
 - **SDL2 só para janela e pixel.** A biblioteca externa permitida é exclusivamente a função de desenho de pixel, conforme ADR-0001.
 - **Luz pontual única.** A fonte de luz é pontual, em coordenadas de mundo, sem atenuação.
-- **Z-buffer e scan line com atributos.** A especialização do scan line para atributos e a profundidade por `invZ` serão formalizadas na ADR-0009 (prevista em #29), complementando a ADR-0005.
+- **Z-buffer e scan line com atributos.** A especialização do scan line para atributos e a profundidade por `invZ` estão formalizadas na ADR-0009, complementando a ADR-0005.
