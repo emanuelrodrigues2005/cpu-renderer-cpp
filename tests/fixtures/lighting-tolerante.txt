@@ -1,0 +1,9 @@
+# Ordem livre, dois-pontos, maiúsculas e comentários.
+ETA : 1
+ks: 0.5
+OD = 0.7 0.5 0.8
+kd = 0.5 0.3 0.2
+pl = 60 5 -10
+il = 127 213 254
+ka = 0.2
+iamb = 100 100 100

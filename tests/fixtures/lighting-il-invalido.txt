@@ -1,0 +1,10 @@
+# Iluminação padrão calibrada para os modelos e a câmera compartilhada.
+# Formato: campo = valor(es), com comentários iniciados por #.
+Iamb = 100 100 100
+Ka = 0.2
+Il = 300 0 0
+Pl = 200 -200 400
+Kd = 0.5 0.3 0.2
+Od = 0.7 0.5 0.8
+Ks = 0.5
+eta = 1
