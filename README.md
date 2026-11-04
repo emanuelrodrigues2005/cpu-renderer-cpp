@@ -34,7 +34,7 @@ cmake --build build --target check   # executa o ctest; também há os alvos run
 ctest --test-dir build --output-on-failure
 ```
 
-A aplicação recebe até três argumentos posicionais, nesta ordem: `[modelo.byu] [camera.txt] [lighting.txt]`. Os padrões são `models/piramide.byu`, `camera/camera.txt` e `lighting/lighting.txt`; um argumento omitido usa o respectivo padrão. Flags: `--info`, `--dump arquivo.bmp`, `--smoke`, `--test-pattern` e `--fullscreen`.
+A aplicação recebe até três argumentos posicionais, nesta ordem: `[modelo.byu] [camera.txt] [lighting.txt]`. Os padrões são `models/piramide.byu`, `camera/camera.txt` e `lighting/lighting.txt`; os posicionais são preenchidos na ordem e argumentos omitidos ao final usam o respectivo padrão. Flags: `--info`, `--dump arquivo.bmp`, `--smoke`, `--test-pattern` e `--fullscreen`.
 
 Exemplos:
 
