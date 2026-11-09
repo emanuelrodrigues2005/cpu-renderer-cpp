@@ -4,6 +4,12 @@
 
 namespace cg {
 
+namespace {
+
+constexpr float kMaxNormalizedCoordinate = 100000.0F;
+
+}
+
 bool projectToNormalized(const Vec3& viewPoint, const Camera& camera,
                          NormalizedPoint& normalized) {
     if (!std::isfinite(viewPoint.x) || !std::isfinite(viewPoint.y) ||
@@ -14,9 +20,17 @@ bool projectToNormalized(const Vec3& viewPoint, const Camera& camera,
         return false;
     }
 
-    normalized.x = (camera.d * viewPoint.x / viewPoint.z) / camera.hx;
-    normalized.y = (camera.d * viewPoint.y / viewPoint.z) / camera.hy;
-    return std::isfinite(normalized.x) && std::isfinite(normalized.y);
+    const float nx = (camera.d * viewPoint.x / viewPoint.z) / camera.hx;
+    const float ny = (camera.d * viewPoint.y / viewPoint.z) / camera.hy;
+
+    if (!std::isfinite(nx) || !std::isfinite(ny) || std::fabs(nx) > kMaxNormalizedCoordinate ||
+        std::fabs(ny) > kMaxNormalizedCoordinate) {
+        return false;
+    }
+
+    normalized.x = nx;
+    normalized.y = ny;
+    return true;
 }
 
 void normalizedToScreen(const NormalizedPoint& normalized, int width, int height,
@@ -27,14 +41,34 @@ void normalizedToScreen(const NormalizedPoint& normalized, int width, int height
         std::lround((1.0F - normalized.y) * static_cast<float>(height) / 2.0F));
 }
 
-bool projectToScreen(const Vec3& viewPoint, const Camera& camera, int width, int height,
-                     ScreenPoint& screen) {
+bool projectToScreenWithDepth(const Vec3& viewPoint, const Camera& camera, int width, int height,
+                              ProjectedVertex& projected) {
     NormalizedPoint normalized;
     if (!projectToNormalized(viewPoint, camera, normalized)) {
         return false;
     }
 
-    normalizedToScreen(normalized, width, height, screen);
+    ProjectedVertex local;
+    normalizedToScreen(normalized, width, height, local.screen);
+    local.viewZ = viewPoint.z;
+    local.invZ = 1.0F / local.viewZ;
+
+    if (!std::isfinite(local.invZ)) {
+        return false;
+    }
+
+    projected = local;
+    return true;
+}
+
+bool projectToScreen(const Vec3& viewPoint, const Camera& camera, int width, int height,
+                     ScreenPoint& screen) {
+    ProjectedVertex projected;
+    if (!projectToScreenWithDepth(viewPoint, camera, width, height, projected)) {
+        return false;
+    }
+
+    screen = projected.screen;
     return true;
 }
 

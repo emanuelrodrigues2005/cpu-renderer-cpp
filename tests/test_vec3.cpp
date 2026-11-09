@@ -77,6 +77,35 @@ void normalizacao_do_vetor_nulo_retorna_vetor_nulo() {
     CHECK_EQ(unitario.z, 0.0F);
 }
 
+void escala_divisao_e_negacao_operam_por_componente() {
+    const cg::Vec3 v{2.0F, 4.0F, 6.0F};
+
+    const cg::Vec3 escalado = v * 3.0F;
+    CHECK_EQ(escalado.x, 6.0F);
+    CHECK_EQ(escalado.y, 12.0F);
+    CHECK_EQ(escalado.z, 18.0F);
+
+    const cg::Vec3 dividido = v / 2.0F;
+    CHECK_EQ(dividido.x, 1.0F);
+    CHECK_EQ(dividido.y, 2.0F);
+    CHECK_EQ(dividido.z, 3.0F);
+
+    const cg::Vec3 negado = -v;
+    CHECK_EQ(negado.x, -2.0F);
+    CHECK_EQ(negado.y, -4.0F);
+    CHECK_EQ(negado.z, -6.0F);
+}
+
+void multiplicacao_componente_a_componente() {
+    const cg::Vec3 a{2.0F, 3.0F, 4.0F};
+    const cg::Vec3 b{0.5F, 0.25F, 2.0F};
+    const cg::Vec3 produto = a.componentMultiply(b);
+
+    CHECK_EQ(produto.x, 1.0F);
+    CHECK_EQ(produto.y, 0.75F);
+    CHECK_EQ(produto.z, 8.0F);
+}
+
 }
 
 int main() {
@@ -86,6 +115,8 @@ int main() {
     magnitude_confere_com_ternos_pitagoricos();
     normalizacao_preserva_direcao_e_vira_unitario();
     normalizacao_do_vetor_nulo_retorna_vetor_nulo();
+    escala_divisao_e_negacao_operam_por_componente();
+    multiplicacao_componente_a_componente();
 
     return test::failureCount() == 0 ? 0 : 1;
 }
